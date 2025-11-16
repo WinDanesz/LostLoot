@@ -1,0 +1,135 @@
+package com.windanesz.lostloot.init;
+
+import com.windanesz.lostloot.LostLoot;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.*;
+import net.minecraft.world.storage.loot.conditions.LootCondition;
+import net.minecraft.world.storage.loot.conditions.LootConditionManager;
+import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.Arrays;
+import java.util.List;
+
+@Mod.EventBusSubscriber
+public class Loot {
+
+    private static LootTable CARAVAN_CRATE;
+
+    private Loot() {}
+
+    /**
+     * Called from the preInit method in the main mod class to register the custom dungeon loot.
+     */
+    public static void preInit() {
+        // chest
+        LootTableList.register(new ResourceLocation(LostLoot.MOD_ID, "chests/dungeon_additions"));
+    }
+
+    @SubscribeEvent
+    public static void onLootTableLoadEvent(LootTableLoadEvent event) {
+        if (Arrays.asList(AncientSpellcraft.settings.lootInjectionLocations).contains(event.getName())) {
+            event.getTable().addPool(getAdditive(AncientSpellcraft.MODID + ":chests/dungeon_additions", AncientSpellcraft.MODID + "_ancientspellcraft_dungeon_additions"));
+        }
+
+        // Fortunately the loot tables of Ancient Spellcraft load before wizardry so we can make a static reference to them and reuse it
+//		if (event.getName().toString().equals(AncientSpellcraft.MODID + ":subsets/uncommon_artefacts")) {
+//			UNCOMMON_ARTEFACTS = event.getTable();
+//		} else if (event.getName().toString().equals(AncientSpellcraft.MODID + ":subsets/rare_artefacts")) {
+//			RARE_ARTEFACTS = event.getTable();
+//		} else if (event.getName().toString().equals(AncientSpellcraft.MODID + ":subsets/epic_artefacts")) {
+//			EPIC_ARTEFACTS = event.getTable();
+//		} else
+        if (event.getName().toString().equals(AncientSpellcraft.MODID + ":inject/as_library_ruins_bookshelf")) {
+            LIBRARY_RUINS_BOOKSHELF = event.getTable();
+        } else if (event.getName().toString().equals(AncientSpellcraft.MODID + ":inject/as_obelisk")) {
+            OBELISK = event.getTable();
+        } else if (event.getName().toString().equals(AncientSpellcraft.MODID + ":inject/as_wizard_tower")) {
+            WIZARD_TOWER = event.getTable();
+        } else if (event.getName().toString().equals(AncientSpellcraft.MODID + ":inject/as_shrine")) {
+            SHRINE = event.getTable();
+        } else if (event.getName().toString().equals(AncientSpellcraft.MODID + ":inject/shrine_extras")) {
+            SHRINE_EXTRAS = event.getTable();
+        }
+
+        // Inject books and scrolls to ebwiz tables
+        if (event.getName().toString().equals(Wizardry.MODID + ":chests/library_ruins_bookshelf") && LIBRARY_RUINS_BOOKSHELF != null) {
+            LootPool targetPool = event.getTable().getPool("wizardry");
+            LootPool sourcePool = LIBRARY_RUINS_BOOKSHELF.getPool("ancientspellcraft");
+            injectEntries(sourcePool, targetPool);
+        } else if (event.getName().toString().equals(Wizardry.MODID + ":chests/obelisk") && OBELISK != null) {
+            LootPool targetPool = event.getTable().getPool("high_value");
+            LootPool sourcePool = OBELISK.getPool("ancientspellcraft");
+            injectEntries(sourcePool, targetPool);
+        } else if (event.getName().toString().equals(Wizardry.MODID + ":chests/shrine") && SHRINE_EXTRAS != null) {
+            // add shrine extras
+            //	event.getTable().addPool(SHRINE_EXTRAS.getPool("shrine_extras"));
+        } else if (event.getName().toString().equals(Wizardry.MODID + ":chests/wizard_tower") && WIZARD_TOWER != null) {
+            LootPool targetPool = event.getTable().getPool("wizardry");
+            LootPool sourcePool = WIZARD_TOWER.getPool("ancientspellcraft");
+            injectEntries(sourcePool, targetPool);
+        } else if (event.getName().toString().equals(Wizardry.MODID + ":subsets/wand_upgrades") && WAND_UPGRADES != null) {
+            LootPool targetPool = event.getTable().getPool("upgrades");
+            LootPool sourcePool = WAND_UPGRADES.getPool("ancientspellcraft");
+            injectEntries(sourcePool, targetPool);
+        }
+
+        if (event.getName().toString().equals(Wizardry.MODID + ":chests/shrine") && SHRINE != null) {
+            LootPool targetPool = event.getTable().getPool("high_value");
+            LootPool sourcePool = SHRINE.getPool("ancientspellcraft");
+            injectEntries(sourcePool, targetPool);
+
+        }
+//
+//		// inject artefacts to ebwiz tables
+//		if (Arrays.asList(AncientSpellcraft.settings.artefactInjectionLocations).contains(event.getName())) {
+//			if (event.getName().toString().equals(Wizardry.MODID + ":subsets/uncommon_artefacts") && UNCOMMON_ARTEFACTS != null) {
+//				LootPool targetPool = event.getTable().getPool("uncommon_artefacts");
+//				LootPool sourcePool = UNCOMMON_ARTEFACTS.getPool("main");
+//				injectEntries(sourcePool, targetPool);
+//			}
+//			if (event.getName().toString().equals(Wizardry.MODID + ":subsets/rare_artefacts") && RARE_ARTEFACTS != null) {
+//				LootPool targetPool = event.getTable().getPool("rare_artefacts");
+//				LootPool sourcePool = RARE_ARTEFACTS.getPool("main");
+//
+//				injectEntries(sourcePool, targetPool);
+//			}
+//			if (event.getName().toString().equals(Wizardry.MODID + ":subsets/epic_artefacts") && EPIC_ARTEFACTS != null) {
+//				LootPool targetPool = event.getTable().getPool("epic_artefacts");
+//				LootPool sourcePool = EPIC_ARTEFACTS.getPool("main");
+//				injectEntries(sourcePool, targetPool);
+//			}
+
+//		}
+    }
+
+    /**
+     * Injects every element of sourcePool into targetPool
+     */
+    private static void injectEntries(LootPool sourcePool, LootPool targetPool) {
+        // Accessing {@link net.minecraft.world.storage.loot.LootPool.lootEntries}
+        if (sourcePool != null && targetPool != null) {
+            List<LootEntry> lootEntries = ObfuscationReflectionHelper.getPrivateValue(LootPool.class, sourcePool, "field_186453_a");
+
+            for (LootEntry entry : lootEntries) {
+                targetPool.addEntry(entry);
+            }
+        } else {
+            AncientSpellcraft.logger.warn("Attempted to inject to null pool source or target.");
+        }
+
+    }
+
+    private static LootPool getAdditive(String entryName, String poolName) {
+        return new LootPool(new LootEntry[]{getAdditiveEntry(entryName, 1)}, new LootCondition[0],
+                new RandomValueRange(1), new RandomValueRange(0, 1), AncientSpellcraft.MODID + "_" + poolName);
+    }
+
+    private static LootEntryTable getAdditiveEntry(String name, int weight) {
+        return new LootEntryTable(new ResourceLocation(name), weight, 0, new LootCondition[0],
+                AncientSpellcraft.MODID + "_additive_entry");
+    }
+
+}
