@@ -1,9 +1,10 @@
 package com.windanesz.lostloot.init;
 
 import com.windanesz.lostloot.LostLoot;
-import com.windanesz.lostloot.block.BlockLostCargo;
-import com.windanesz.lostloot.block.TileEntityLostCargo;
+import com.windanesz.lostloot.block.BlockLostLoot;
+import com.windanesz.lostloot.block.TileEntityLostLoot;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -19,7 +20,8 @@ public class Blocks {
 
     private Blocks() {}
 
-    public static final Block LOST_CARGO = placeholder();
+    public static final Block lost_cargo = placeholder();
+    public static final Block skeleton_crate = placeholder();
 
     @Nonnull
     @SuppressWarnings("ConstantConditions")
@@ -30,7 +32,8 @@ public class Blocks {
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> registry = event.getRegistry();
-        registerBlock(registry, "lost_cargo", new BlockLostCargo());
+        registerBlock(registry, "lost_cargo", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/lost_cargo")));
+        registerBlock(registry, "skeleton_crate", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/lost_cargo")));
     }
 
     public static void registerBlock(IForgeRegistry<Block> registry, String name, Block block) {
@@ -41,6 +44,6 @@ public class Blocks {
 
     public static void registerTileEntities() {
         // Nope, these still don't have their own registry...
-        GameRegistry.registerTileEntity(TileEntityLostCargo.class, new ResourceLocation(LostLoot.MOD_ID, "lost_cargo"));
+        GameRegistry.registerTileEntity(TileEntityLostLoot.class, new ResourceLocation(LostLoot.MOD_ID, "lost_loot"));
     }
 }

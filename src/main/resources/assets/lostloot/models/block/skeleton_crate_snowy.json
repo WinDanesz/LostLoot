@@ -1,0 +1,7 @@
+{
+	"parent": "lostloot:block/skeleton_crate",
+	"textures": {
+		"1": "lostloot:blocks/skeleton_crate_snowy",
+		"particle": "lostloot:blocks/skeleton_crate_snowy"
+	}
+}

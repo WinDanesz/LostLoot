@@ -1,8 +1,12 @@
 {
   "variants": {
-    "facing=north": { "model": "lostloot:lost_cargo" },
-    "facing=south": { "model": "lostloot:lost_cargo", "y": 180 },
-    "facing=west":  { "model": "lostloot:lost_cargo", "y": 270 },
-    "facing=east":  { "model": "lostloot:lost_cargo", "y": 90 }
+    "facing=north,snowy=false": { "model": "lostloot:lost_cargo" },
+    "facing=east,snowy=false":  { "model": "lostloot:lost_cargo", "y": 90 },
+    "facing=south,snowy=false": { "model": "lostloot:lost_cargo", "y": 180 },
+    "facing=west,snowy=false":  { "model": "lostloot:lost_cargo", "y": 270 },
+    "facing=north,snowy=true": { "model": "lostloot:lost_cargo_snowy" },
+    "facing=east,snowy=true":  { "model": "lostloot:lost_cargo_snowy", "y": 90 },
+    "facing=south,snowy=true": { "model": "lostloot:lost_cargo_snowy", "y": 180 },
+    "facing=west,snowy=true":  { "model": "lostloot:lost_cargo_snowy", "y": 270 }
   }
 }
