@@ -1,11 +1,21 @@
 package com.windanesz.lostloot.client;
 
 import com.windanesz.lostloot.CommonProxy;
+import com.windanesz.lostloot.client.renderer.RenderSpecter;
+import com.windanesz.lostloot.entity.EntitySpecter;
 import com.windanesz.lostloot.init.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.biome.BiomeColorHelper;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy {
+
+	@Override
+	public void preInit(FMLPreInitializationEvent event) {
+		super.preInit(event);
+		registerEntityRenderers();
+	}
 
 	@Override
 	public void registerColorHandlers() {
@@ -19,6 +29,9 @@ public class ClientProxy extends CommonProxy {
 				},
 				Blocks.skeleton_crate
 		);
+	}
 
+	private void registerEntityRenderers() {
+		RenderingRegistry.registerEntityRenderingHandler(EntitySpecter.class, RenderSpecter::new);
 	}
 }

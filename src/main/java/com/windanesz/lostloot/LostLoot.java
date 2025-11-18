@@ -22,6 +22,7 @@ public class LostLoot {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        proxy.preInit(event);
         Blocks.registerTileEntities();
         Loot.register();
 	}
