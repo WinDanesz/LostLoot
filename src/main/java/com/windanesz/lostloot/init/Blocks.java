@@ -22,6 +22,7 @@ public class Blocks {
 
     public static final Block lost_cargo = placeholder();
     public static final Block skeleton_crate = placeholder();
+    public static final Block lost_crate_potions = placeholder();
 
     @Nonnull
     @SuppressWarnings("ConstantConditions")
@@ -34,6 +35,7 @@ public class Blocks {
         IForgeRegistry<Block> registry = event.getRegistry();
         registerBlock(registry, "lost_cargo", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/lost_cargo")));
         registerBlock(registry, "skeleton_crate", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/lost_cargo")));
+        registerBlock(registry, "lost_crate_potions", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/lost_cargo")));
     }
 
     public static void registerBlock(IForgeRegistry<Block> registry, String name, Block block) {
