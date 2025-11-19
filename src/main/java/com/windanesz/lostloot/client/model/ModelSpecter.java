@@ -1,5 +1,6 @@
 package com.windanesz.lostloot.client.model;
 
+import com.windanesz.lostloot.entity.EntitySpecter;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
@@ -130,14 +131,25 @@ public class ModelSpecter extends ModelBase {
 		this.head.rotateAngleX = headPitch * 0.017453292F;
 		this.head.rotateAngleY = netHeadYaw * 0.017453292F;
 
-		this.right_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
 		this.right_arm.rotateAngleZ = 0.0F;
-		this.left_arm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
 		this.left_arm.rotateAngleZ = 0.0F;
 
+		if (entityIn instanceof EntitySpecter && ((EntitySpecter) entityIn).isAttacking()) {
+			float angle = -1.5707964F; // -90 degrees
+			this.right_arm.rotateAngleX = angle;
+			this.left_arm.rotateAngleX = angle;
+			this.right_arm.rotateAngleX += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+			this.left_arm.rotateAngleX -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+			this.right_arm.rotateAngleZ += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+			this.left_arm.rotateAngleZ -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
+		} else {
+			this.right_arm.rotateAngleX = 0.0F;
+			this.left_arm.rotateAngleX = 0.0F;
+		}
+
 		if (this.swingProgress > 0.0F) {
-			this.right_arm.rotateAngleX = this.right_arm.rotateAngleX * 0.5F - ((float)Math.PI / 10F) * this.swingProgress;
-			this.left_arm.rotateAngleX = this.left_arm.rotateAngleX * 0.5F - ((float)Math.PI / 10F) * this.swingProgress;
+			this.right_arm.rotateAngleX = this.right_arm.rotateAngleX * 0.5F - ((float) Math.PI / 10F) * this.swingProgress;
+			this.left_arm.rotateAngleX = this.left_arm.rotateAngleX * 0.5F - ((float) Math.PI / 10F) * this.swingProgress;
 		}
 	}
 }
