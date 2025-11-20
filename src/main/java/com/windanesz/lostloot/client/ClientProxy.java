@@ -15,6 +15,7 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		registerEntityRenderers();
+
 	}
 
 	@Override
@@ -27,7 +28,8 @@ public class ClientProxy extends CommonProxy {
 					}
 					return 0xFFFFFF;
 				},
-				Blocks.skeleton_crate
+				Blocks.skeleton_crate,
+				Blocks.bush_crate
 		);
 	}
 

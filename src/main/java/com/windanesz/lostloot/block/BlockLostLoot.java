@@ -80,9 +80,8 @@ public class BlockLostLoot extends BlockContainer {
     @Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT; // or TRANSLUCENT if you want full alpha blending
+        return BlockRenderLayer.CUTOUT;
     }
-
 
     @Override
     public int getMetaFromState(IBlockState state) {

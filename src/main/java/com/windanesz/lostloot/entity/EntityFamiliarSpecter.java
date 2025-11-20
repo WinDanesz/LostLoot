@@ -23,12 +23,12 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class EntitySpecter extends EntityCreature {
+public class EntityFamiliarSpecter extends EntityCreature {
 
-    protected static final DataParameter<Boolean> ATTACKING = EntityDataManager.createKey(EntitySpecter.class, DataSerializers.BOOLEAN);
-    public static final ResourceLocation LOOT_TABLE = new ResourceLocation(LostLoot.MOD_ID, "entities/specter");
+    protected static final DataParameter<Boolean> ATTACKING = EntityDataManager.createKey(EntityFamiliarSpecter.class, DataSerializers.BOOLEAN);
+    public static final ResourceLocation LOOT_TABLE = new ResourceLocation(LostLoot.MOD_ID, "entities/familiar_specter");
 
-    public EntitySpecter(World worldIn) {
+    public EntityFamiliarSpecter(World worldIn) {
         super(worldIn);
         this.setSize(0.6F, 1.8F);
         this.isImmuneToFire = true;
@@ -144,15 +144,12 @@ public class EntitySpecter extends EntityCreature {
     protected void updateFallState(double y, boolean onGroundIn, IBlockState landedState, BlockPos pos) {
     }
 
-// ... (keep existing imports)
-
-// ... (inside EntitySpecter class)
         static class AIAttack extends EntityAIBase {
-            private final EntitySpecter parentEntity;
+            private final EntityFamiliarSpecter parentEntity;
             private int attackCooldown;
             private int dashCooldown;
 
-            public AIAttack(EntitySpecter specter) {
+            public AIAttack(EntityFamiliarSpecter specter) {
                 this.parentEntity = specter;
                 this.setMutexBits(1);
             }
@@ -256,9 +253,9 @@ public class EntitySpecter extends EntityCreature {
     }
 
     static class AIRandomFly extends EntityAIBase {
-        private final EntitySpecter parentEntity;
+        private final EntityFamiliarSpecter parentEntity;
 
-        public AIRandomFly(EntitySpecter specter) {
+        public AIRandomFly(EntityFamiliarSpecter specter) {
             this.parentEntity = specter;
             this.setMutexBits(1);
         }
@@ -293,10 +290,10 @@ public class EntitySpecter extends EntityCreature {
     }
 
     static class SpecterMoveHelper extends EntityMoveHelper {
-        private final EntitySpecter parentEntity;
+        private final EntityFamiliarSpecter parentEntity;
         private int cooldown;
 
-        public SpecterMoveHelper(EntitySpecter specter) {
+        public SpecterMoveHelper(EntityFamiliarSpecter specter) {
             super(specter);
             this.parentEntity = specter;
         }
@@ -312,7 +309,7 @@ public class EntitySpecter extends EntityCreature {
                 return;
             }
 
-            if (this.action == EntityMoveHelper.Action.MOVE_TO) {
+            if (this.action == Action.MOVE_TO) {
                 double d0 = this.posX - this.parentEntity.posX;
                 double d1 = this.posY - this.parentEntity.posY;
                 double d2 = this.posZ - this.parentEntity.posZ;
