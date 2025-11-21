@@ -1,12 +1,10 @@
 package com.windanesz.lostloot.init;
 
 import com.windanesz.lostloot.LostLoot;
-import com.windanesz.lostloot.block.BlockLostLoot;
-import com.windanesz.lostloot.block.BlockLostLootMultiBlock;
-import com.windanesz.lostloot.block.BlockLootSceneDummy;
-import com.windanesz.lostloot.block.TileEntityLostLoot;
+import com.windanesz.lostloot.block.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,6 +25,7 @@ public class Blocks {
     public static final Block lost_crate_potions = placeholder();
     public static final Block bush_crate = placeholder();
     public static final Block loot_scene_dummy = placeholder();
+    public static final Block stone_circle = placeholder();
 
     @Nonnull
     @SuppressWarnings("ConstantConditions")
@@ -40,8 +39,10 @@ public class Blocks {
         registerBlock(registry, "lost_cargo", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/lost_cargo")));
         registerBlock(registry, "skeleton_crate", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/lost_cargo")));
         registerBlock(registry, "lost_crate_potions", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/lost_cargo")));
-        registerBlock(registry, "bush_crate", new BlockLostLootMultiBlock(Material.IRON).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/loot_scene")));
+        registerBlock(registry, "bush_crate", new BlockLostLootMultiBlock(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/loot_scene")));
         registerBlock(registry, "loot_scene_dummy", new BlockLootSceneDummy(Material.IRON));
+        registerBlock(registry, "stone_circle", new BlockLostLoot(Material.ROCK).setBoundingBox(new AxisAlignedBB(0,0,0,1,0.1,1)));
+        registerBlock(registry, "grave_marker", new BlockGraveMarker(Material.ROCK).setBoundingBox(new AxisAlignedBB(0,0,0,1,0.4,1)));
     }
 
     public static void registerBlock(IForgeRegistry<Block> registry, String name, Block block) {
@@ -53,5 +54,7 @@ public class Blocks {
     public static void registerTileEntities() {
         // Nope, these still don't have their own registry...
         GameRegistry.registerTileEntity(TileEntityLostLoot.class, new ResourceLocation(LostLoot.MOD_ID, "lost_loot"));
+        GameRegistry.registerTileEntity(TileEntityGraveMarker.class, new ResourceLocation(LostLoot.MOD_ID, "grave_marker"));
+        GameRegistry.registerTileEntity(TileEntityGraveMarker.class, new ResourceLocation(LostLoot.MOD_ID, "grave_marker"));
     }
 }

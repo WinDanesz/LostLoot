@@ -7,6 +7,7 @@ import com.windanesz.lostloot.init.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy {
@@ -15,7 +16,7 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		registerEntityRenderers();
-
+		registerTileEntityRenderers();
 	}
 
 	@Override
@@ -35,5 +36,9 @@ public class ClientProxy extends CommonProxy {
 
 	private void registerEntityRenderers() {
 		RenderingRegistry.registerEntityRenderingHandler(EntitySpecter.class, RenderSpecter::new);
+	}
+
+	private void registerTileEntityRenderers() {
+		ClientRegistry.bindTileEntitySpecialRenderer(com.windanesz.lostloot.block.TileEntityGraveMarker.class, new TileEntityGraveMarkerRenderer());
 	}
 }
