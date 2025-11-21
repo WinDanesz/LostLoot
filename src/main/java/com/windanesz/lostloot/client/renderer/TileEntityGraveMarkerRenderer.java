@@ -24,14 +24,23 @@ public class TileEntityGraveMarkerRenderer extends TileEntitySpecialRenderer<Til
             IBlockState flowerState = flowerBlock.getStateFromMeta(flowerStack.getMetadata());
 
             GlStateManager.pushMatrix();
-            // Translate to the center of the block, and up a bit
-            GlStateManager.translate(x + 0.5, y + 0.4, z + 0.5);
+
+            // Translate to the block's position.
+            GlStateManager.translate(x, y, z);
+
+            // Translate to the center of the block and slightly up for rendering.
+            GlStateManager.translate(0.5, 0.4, 0.5);
+            GlStateManager.scale(0.8, 0.8, 0.8);
+            
+            // Translate the block model to its center before rendering
+            GlStateManager.translate(-0.5, -0.5, -0.5);
 
             World world = te.getWorld();
-            bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
             GlStateManager.disableLighting();
-            Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlockBrightness(flowerState, world.getCombinedLight(te.getPos(), flowerState.getLightValue(world, te.getPos())));
+            Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlockBrightness(flowerState, 1.0f);
             GlStateManager.enableLighting();
+
             GlStateManager.popMatrix();
         }
     }
