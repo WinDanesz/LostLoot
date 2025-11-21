@@ -11,11 +11,11 @@ import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nullable;
 
-public class RenderSpecter extends RenderLiving<EntitySpecter> {
+public class RenderFamiliarSpecter extends RenderLiving<EntitySpecter> {
 
 	public static final ResourceLocation TEXTURE = new ResourceLocation(LostLoot.MOD_ID, "textures/entity/specter.png");
 
-	public RenderSpecter(RenderManager rendermanagerIn) {
+	public RenderFamiliarSpecter(RenderManager rendermanagerIn) {
 		super(rendermanagerIn, new ModelSpecter(), 0F);
 	}
 

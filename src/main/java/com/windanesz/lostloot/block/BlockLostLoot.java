@@ -1,5 +1,6 @@
 package com.windanesz.lostloot.block;
 
+import com.windanesz.lostloot.block.tile.TileEntityLostLoot;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -31,12 +32,14 @@ public class BlockLostLoot extends BlockContainer {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     public static final PropertyBool SNOWY = PropertyBool.create("snowy");
 	public ResourceLocation lootTable;
+	public AxisAlignedBB boundingBox;
 
 	public BlockLostLoot(Material materialmaterialn) {
 		super(materialmaterialn);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(SNOWY, false));
 		setHardness(1.5F);
 		setResistance(5.0F);
+		this.boundingBox = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D); // Default AABB
 	}
 
     @Override
@@ -44,11 +47,15 @@ public class BlockLostLoot extends BlockContainer {
         return new TileEntityLostLoot();
     }
 
-    private static final AxisAlignedBB HALF_BLOCK_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, net.minecraft.world.IBlockAccess source, BlockPos pos) {
-        return HALF_BLOCK_AABB;
+        return this.boundingBox;
     }
+
+	public BlockLostLoot setBoundingBox(AxisAlignedBB boundingBox) {
+		this.boundingBox = boundingBox;
+		return this;
+	}
 
     @Override
     public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
@@ -118,7 +125,7 @@ public class BlockLostLoot extends BlockContainer {
 
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
-        if (!worldIn.isRemote && player.isCreative()) {
+        if (!worldIn.isRemote && player.isCreative() && this.lootTable != null) {
             LootTable loottable = worldIn.getLootTableManager().getLootTableFromLocation(this.lootTable);
             LootContext.Builder lootcontext$builder = new LootContext.Builder((WorldServer)worldIn).withPlayer(player).withLuck(player.getLuck());
 

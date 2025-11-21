@@ -1,5 +1,6 @@
 package com.windanesz.lostloot.block;
 
+import com.windanesz.lostloot.block.tile.TileEntityGraveMarker;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

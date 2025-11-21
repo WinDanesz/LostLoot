@@ -2,6 +2,8 @@ package com.windanesz.lostloot.init;
 
 import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.block.*;
+import com.windanesz.lostloot.block.tile.TileEntityGraveMarker;
+import com.windanesz.lostloot.block.tile.TileEntityLostLoot;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -39,8 +41,8 @@ public class Blocks {
         registerBlock(registry, "lost_cargo", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/lost_cargo")));
         registerBlock(registry, "skeleton_crate", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/lost_cargo")));
         registerBlock(registry, "lost_crate_potions", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/lost_cargo")));
-        registerBlock(registry, "bush_crate", new BlockLostLootMultiBlock(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/loot_scene")));
-        registerBlock(registry, "loot_scene_dummy", new BlockLootSceneDummy(Material.IRON));
+        registerBlock(registry, "bush_crate", new BlockLostLootMultiBlock(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MOD_ID, "chests/lost_cargo")));
+        //registerBlock(registry, "loot_scene_dummy", new BlockLootSceneDummy(Material.IRON));
         registerBlock(registry, "stone_circle", new BlockLostLoot(Material.ROCK).setBoundingBox(new AxisAlignedBB(0,0,0,1,0.1,1)));
         registerBlock(registry, "grave_marker", new BlockGraveMarker(Material.ROCK).setBoundingBox(new AxisAlignedBB(0,0,0,1,0.4,1)));
     }
@@ -54,7 +56,6 @@ public class Blocks {
     public static void registerTileEntities() {
         // Nope, these still don't have their own registry...
         GameRegistry.registerTileEntity(TileEntityLostLoot.class, new ResourceLocation(LostLoot.MOD_ID, "lost_loot"));
-        GameRegistry.registerTileEntity(TileEntityGraveMarker.class, new ResourceLocation(LostLoot.MOD_ID, "grave_marker"));
         GameRegistry.registerTileEntity(TileEntityGraveMarker.class, new ResourceLocation(LostLoot.MOD_ID, "grave_marker"));
     }
 }

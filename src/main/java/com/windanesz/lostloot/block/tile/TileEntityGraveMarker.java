@@ -1,4 +1,4 @@
-package com.windanesz.lostloot.block;
+package com.windanesz.lostloot.block.tile;
 
 import javax.annotation.Nullable;
 import net.minecraft.item.Item;

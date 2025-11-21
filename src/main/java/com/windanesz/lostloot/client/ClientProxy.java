@@ -1,7 +1,9 @@
 package com.windanesz.lostloot.client;
 
 import com.windanesz.lostloot.CommonProxy;
+import com.windanesz.lostloot.block.tile.TileEntityGraveMarker;
 import com.windanesz.lostloot.client.renderer.RenderSpecter;
+import com.windanesz.lostloot.client.renderer.TileEntityGraveMarkerRenderer;
 import com.windanesz.lostloot.entity.EntitySpecter;
 import com.windanesz.lostloot.init.Blocks;
 import net.minecraft.client.Minecraft;
@@ -10,6 +12,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+@SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
 
 	@Override
@@ -39,6 +42,6 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	private void registerTileEntityRenderers() {
-		ClientRegistry.bindTileEntitySpecialRenderer(com.windanesz.lostloot.block.TileEntityGraveMarker.class, new TileEntityGraveMarkerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGraveMarker.class, new TileEntityGraveMarkerRenderer());
 	}
 }

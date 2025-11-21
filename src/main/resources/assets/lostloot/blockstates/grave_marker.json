@@ -1,12 +1,12 @@
 {
   "variants": {
-    "facing=north,snowy=false": { "model": "lostloot:bush_crate" },
-    "facing=east,snowy=false":  { "model": "lostloot:bush_crate", "y": 90 },
-    "facing=south,snowy=false": { "model": "lostloot:bush_crate", "y": 180 },
-    "facing=west,snowy=false":  { "model": "lostloot:bush_crate", "y": 270 },
-    "facing=north,snowy=true": { "model": "lostloot:bush_crate_snowy" },
-    "facing=east,snowy=true":  { "model": "lostloot:bush_crate_snowy", "y": 90 },
-    "facing=south,snowy=true": { "model": "lostloot:bush_crate_snowy", "y": 180 },
-    "facing=west,snowy=true":  { "model": "lostloot:bush_crate_snowy", "y": 270 }
+    "facing=north,snowy=false": { "model": "lostloot:grave_marker" },
+    "facing=east,snowy=false":  { "model": "lostloot:grave_marker", "y": 90 },
+    "facing=south,snowy=false": { "model": "lostloot:grave_marker", "y": 180 },
+    "facing=west,snowy=false":  { "model": "lostloot:grave_marker", "y": 270 },
+    "facing=north,snowy=true": { "model": "lostloot:grave_marker" },
+    "facing=east,snowy=true":  { "model": "lostloot:grave_marker", "y": 90 },
+    "facing=south,snowy=true": { "model": "lostloot:grave_marker", "y": 180 },
+    "facing=west,snowy=true":  { "model": "lostloot:grave_marker", "y": 270 }
   }
 }

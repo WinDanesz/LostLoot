@@ -1,5 +1,6 @@
 package com.windanesz.lostloot.block;
 
+import com.windanesz.lostloot.block.tile.TileEntityLostLoot;
 import com.windanesz.lostloot.init.Blocks;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -10,6 +11,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -168,7 +170,7 @@ public class BlockLostLootMultiBlock extends BlockContainer {
 
 
 	@Override
-	public TileEntityLostLoot createNewTileEntity(World world, int meta) {
+	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileEntityLostLoot();
 	}
 

@@ -2,9 +2,10 @@
 	"format_version": "1.9.0",
 	"credit": "Made by Foreck with Blockbench",
 	"textures": {
-		"0": "dirt",
-		"1": "skeleton_crate"
-	},
+		"0": "blocks/dirt",
+		"1": "lostloot:blocks/skeleton_crate",
+        "particle": "blocks/dirt"
+    },
 	"elements": [
 		{
 			"from": [0, 0, 0],
