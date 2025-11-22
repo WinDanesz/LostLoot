@@ -1,7 +1,7 @@
 package com.windanesz.lostloot.block;
 
 import com.windanesz.lostloot.block.tile.TileEntityLostLoot;
-import com.windanesz.lostloot.init.Blocks;
+import com.windanesz.lostloot.init.ModBlocks;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -92,7 +92,7 @@ public class BlockLostLootMultiBlock extends BlockContainer {
 						// Check if the space is air or replaceable. If not, cancel placement? Or just don't place?
 						// For now, let's assume it's clear.
 						if (worldIn.isAirBlock(currentPos) || worldIn.getBlockState(currentPos).getBlock().isReplaceable(worldIn, currentPos)) {
-							worldIn.setBlockState(currentPos, Blocks.loot_scene_dummy.getDefaultState(), 3); // Place dummy block
+							worldIn.setBlockState(currentPos, ModBlocks.loot_scene_dummy.getDefaultState(), 3); // Place dummy block
 
 						} else {
 							// If any adjacent block is not replaceable, break the master block to undo placement

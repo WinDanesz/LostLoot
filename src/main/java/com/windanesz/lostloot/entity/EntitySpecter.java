@@ -26,7 +26,7 @@ import java.util.Random;
 public class EntitySpecter extends EntityCreature {
 
     protected static final DataParameter<Boolean> ATTACKING = EntityDataManager.createKey(EntitySpecter.class, DataSerializers.BOOLEAN);
-    public static final ResourceLocation LOOT_TABLE = new ResourceLocation(LostLoot.MOD_ID, "entities/specter");
+    public static final ResourceLocation LOOT_TABLE = new ResourceLocation(LostLoot.MODID, "entities/specter");
 
     public EntitySpecter(World worldIn) {
         super(worldIn);

@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-@Config(modid = LostLoot.MOD_ID, name = "LostLoot")
+@Config(modid = LostLoot.MODID, name = "LostLoot")
 public class Settings {
 
     // These are set after config load, not part of config fields
@@ -48,12 +48,12 @@ public class Settings {
     }
 
     @SuppressWarnings("unused")
-    @Mod.EventBusSubscriber(modid = LostLoot.MOD_ID)
+    @Mod.EventBusSubscriber(modid = LostLoot.MODID)
     private static class EventHandler {
         @SubscribeEvent
         public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-            if (event.getModID().equals(LostLoot.MOD_ID)) {
-                ConfigManager.sync(LostLoot.MOD_ID, Config.Type.INSTANCE);
+            if (event.getModID().equals(LostLoot.MODID)) {
+                ConfigManager.sync(LostLoot.MODID, Config.Type.INSTANCE);
             }
         }
     }

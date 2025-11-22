@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 
 public class RenderFamiliarSpecter extends RenderLiving<EntitySpecter> {
 
-	public static final ResourceLocation TEXTURE = new ResourceLocation(LostLoot.MOD_ID, "textures/entity/specter.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(LostLoot.MODID, "textures/entity/specter.png");
 
 	public RenderFamiliarSpecter(RenderManager rendermanagerIn) {
 		super(rendermanagerIn, new ModelSpecter(), 0F);

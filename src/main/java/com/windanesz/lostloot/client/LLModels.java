@@ -1,12 +1,9 @@
 package com.windanesz.lostloot.client;
 
 import com.windanesz.lostloot.LostLoot;
-import com.windanesz.lostloot.Tags;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.Mod;
@@ -32,7 +29,7 @@ public final class LLModels {
     @SubscribeEvent
     public static void register(ModelRegistryEvent event) {
         for (Item item : Item.REGISTRY) {
-            if (!registeredItems.contains(item) && item.getRegistryName().getNamespace().equals(LostLoot.MOD_ID)) {
+            if (!registeredItems.contains(item) && item.getRegistryName().getNamespace().equals(LostLoot.MODID)) {
                 registerItemModel(item); // Standard item model
             }
         }

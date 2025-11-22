@@ -3,18 +3,13 @@ package com.windanesz.lostloot.init;
 import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.entity.EntitySpecter;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber
 public class Entities {
@@ -55,6 +50,7 @@ public class Entities {
 
 		// projectile entities
 		registry.register(createEntry(EntitySpecter.class, "specter", TrackingType.LIVING).egg(0xebf2ff,0x6aeba6).build());
+		registry.register(createEntry(EntitySpecter.class, "specter_familiar", TrackingType.LIVING).egg(0xebf2ff,0x6aeba6).build());
 	}
 
 	/**
@@ -83,7 +79,7 @@ public class Entities {
 	 * @return The (part-built) builder instance, allowing other builder methods to be added as necessary.
 	 */
 	private static <T extends Entity> EntityEntryBuilder<T> createEntry(Class<T> entityClass, String name) {
-		ResourceLocation registryName = new ResourceLocation(LostLoot.MOD_ID, name);
+		ResourceLocation registryName = new ResourceLocation(LostLoot.MODID, name);
 		return EntityEntryBuilder.<T>create().entity(entityClass).id(registryName, id++).name(registryName.toString());
 	}
 

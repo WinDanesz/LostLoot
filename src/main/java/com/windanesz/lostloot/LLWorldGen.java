@@ -1,7 +1,7 @@
 package com.windanesz.lostloot;
 
 import com.windanesz.lostloot.block.BlockLostLoot;
-import com.windanesz.lostloot.init.Blocks;
+import com.windanesz.lostloot.init.ModBlocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -44,7 +44,7 @@ public class LLWorldGen implements IWorldGenerator {
 				if (!world.getBlockState(pos).isTopSolid()) continue;
 
 				EnumFacing facing = EnumFacing.Plane.HORIZONTAL.random(random);
-				world.setBlockState(placePos, Blocks.lost_cargo.getDefaultState().withProperty(BlockLostLoot.FACING, facing));
+				world.setBlockState(placePos, ModBlocks.lost_cargo.getDefaultState().withProperty(BlockLostLoot.FACING, facing));
 				break; // Only place one per chunk
 			}
 		}

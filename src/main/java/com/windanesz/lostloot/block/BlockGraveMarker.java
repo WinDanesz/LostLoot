@@ -1,6 +1,7 @@
 package com.windanesz.lostloot.block;
 
 import com.windanesz.lostloot.block.tile.TileEntityGraveMarker;
+import com.windanesz.lostloot.init.ModBlocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -71,13 +72,14 @@ public class BlockGraveMarker extends BlockLostLoot {
 		// For now, we'll check against a few common flower items.
 		// You might want to use a tag system or a custom list of items.
 		return stack.getItem() instanceof net.minecraft.item.ItemBlock && (
-				net.minecraft.block.Block.getBlockFromItem(stack.getItem()) instanceof net.minecraft.block.BlockFlower ||
-				net.minecraft.block.Block.getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.RED_MUSHROOM ||
-				net.minecraft.block.Block.getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.BROWN_MUSHROOM ||
-				net.minecraft.block.Block.getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.CACTUS ||
-				net.minecraft.block.Block.getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.TALLGRASS ||
-				net.minecraft.block.Block.getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.DEADBUSH ||
-				net.minecraft.block.Block.getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.YELLOW_FLOWER
+				getBlockFromItem(stack.getItem()) instanceof net.minecraft.block.BlockFlower ||
+				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.RED_MUSHROOM ||
+				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.BROWN_MUSHROOM ||
+				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.CACTUS ||
+				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.TALLGRASS ||
+				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.DEADBUSH ||
+				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.YELLOW_FLOWER ||
+				getBlockFromItem(stack.getItem()) == ModBlocks.rose
 		);
 	}
 }
