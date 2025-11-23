@@ -21,11 +21,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.UUID;
-
 import javax.annotation.Nullable;
-
 import java.util.Random;
+import java.util.UUID;
 
 public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwnable {
 
@@ -45,7 +43,7 @@ public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwna
 	protected void initEntityAI() {
 		this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
 		this.tasks.addTask(4, new AIAttack(this));
-		this.tasks.addTask(5, new AIFollowOwner(this, 1.0D, 5.0F, 2.0F));
+		this.tasks.addTask(5, new AIFollowOwner(this, 1.0D, 5.0F, 3.0F));
 		this.tasks.addTask(6, new AIRandomFly(this));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
@@ -231,6 +229,9 @@ public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwna
 		@Override
 		public void resetTask() {
 			this.parentEntity.setAttacking(false);
+			if (this.parentEntity.getMoveHelper() instanceof SpecterMoveHelper) {
+				((SpecterMoveHelper) this.parentEntity.getMoveHelper()).startCooldown(0);
+			}
 		}
 
 		@Override
@@ -269,7 +270,7 @@ public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwna
 
 					Vec3d chosenDir = directions[random.nextInt(directions.length)];
 
-					double distance = 2.0; //+ random.nextDouble() * 1.0; // 2-3 blocks from player
+					double distance = 3.0; //+ random.nextDouble() * 1.0; // 2-3 blocks from player
 
 					double destX = target.posX + chosenDir.x * distance;
 					double destY = target.posY + 1.0;
@@ -286,22 +287,12 @@ public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwna
 						this.parentEntity.motionY = (moveVecY / moveLen) * dashSpeed * 0.1;
 						this.parentEntity.motionZ = (moveVecZ / moveLen) * dashSpeed;
 
-													if (this.parentEntity.getMoveHelper() instanceof SpecterMoveHelper) {
-														((SpecterMoveHelper) this.parentEntity.getMoveHelper()).startCooldown(20);
-													}					}
+						if (this.parentEntity.getMoveHelper() instanceof SpecterMoveHelper) {
+							((SpecterMoveHelper) this.parentEntity.getMoveHelper()).startCooldown(20);
+						}
+					}
 				}
 			}
-		}
-	}
-
-	static class AIFindPlayerToAttack extends EntityAINearestAttackableTarget<EntityPlayer> {
-		public AIFindPlayerToAttack(EntityCreature mob) {
-			super(mob, EntityPlayer.class, true);
-		}
-
-		@Override
-		public boolean shouldExecute() {
-			return super.shouldExecute() && this.target != null;
 		}
 	}
 
@@ -315,6 +306,11 @@ public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwna
 
 		@Override
 		public boolean shouldExecute() {
+			// Add a random chance to execute, so it doesn't move constantly
+			if (this.parentEntity.getRNG().nextInt(80) != 0) {
+				return false;
+			}
+
 			EntityMoveHelper entitymovehelper = this.parentEntity.getMoveHelper();
 			if (!entitymovehelper.isUpdating()) {
 				return true;
@@ -423,7 +419,7 @@ public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwna
 
 			if (owner == null) {
 				return false;
-			} else if (this.specter.getDistanceSq(owner) < (double)(this.minDist * this.minDist)) {
+			} else if (this.specter.getDistanceSq(owner) < (double) (this.minDist * this.minDist)) {
 				return false;
 			} else {
 				this.owner = owner;
@@ -432,7 +428,7 @@ public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwna
 		}
 
 		public boolean shouldContinueExecuting() {
-			return this.specter.getDistanceSq(this.owner) > (double)(this.maxDist * this.maxDist);
+			return this.specter.getDistanceSq(this.owner) > (double) (this.maxDist * this.maxDist);
 		}
 
 		public void startExecuting() {
@@ -445,7 +441,7 @@ public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwna
 		}
 
 		public void updateTask() {
-			this.specter.getLookHelper().setLookPositionWithEntity(this.owner, 10.0F, (float)this.specter.getVerticalFaceSpeed());
+			this.specter.getLookHelper().setLookPositionWithEntity(this.owner, 10.0F, (float) this.specter.getVerticalFaceSpeed());
 
 			if (--this.timeToRecalcPath <= 0) {
 				this.timeToRecalcPath = 10;

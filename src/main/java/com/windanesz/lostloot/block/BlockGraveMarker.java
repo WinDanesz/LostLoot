@@ -69,14 +69,14 @@ public class BlockGraveMarker extends BlockLostLoot {
 	private boolean canBePotted(ItemStack stack) {
 		return stack.getItem() instanceof net.minecraft.item.ItemBlock && (
 				getBlockFromItem(stack.getItem()) instanceof net.minecraft.block.BlockFlower ||
-				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.RED_MUSHROOM ||
-				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.BROWN_MUSHROOM ||
-				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.CACTUS ||
-				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.TALLGRASS ||
-				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.DEADBUSH ||
-				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.YELLOW_FLOWER ||
-				getBlockFromItem(stack.getItem()) == ModBlocks.rose ||
-				getBlockFromItem(stack.getItem()) == ModBlocks.grave_rose
+						getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.RED_MUSHROOM ||
+						getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.BROWN_MUSHROOM ||
+						getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.CACTUS ||
+						getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.TALLGRASS ||
+						getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.DEADBUSH ||
+						getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.YELLOW_FLOWER ||
+						getBlockFromItem(stack.getItem()) == ModBlocks.rose ||
+						getBlockFromItem(stack.getItem()) == ModBlocks.grave_rose
 		);
 	}
 }
