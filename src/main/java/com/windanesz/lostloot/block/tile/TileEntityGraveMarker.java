@@ -1,14 +1,18 @@
 package com.windanesz.lostloot.block.tile;
 
-import javax.annotation.Nullable;
+import com.windanesz.lostloot.init.ModBlocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 
-public class TileEntityGraveMarker extends TileEntity
+import javax.annotation.Nullable;
+
+public class TileEntityGraveMarker extends TileEntity implements ITickable
 {
     private Item flowerPotItem;
     private int flowerPotData;
@@ -21,6 +25,20 @@ public class TileEntityGraveMarker extends TileEntity
     {
         this.flowerPotItem = potItem;
         this.flowerPotData = potData;
+    }
+
+    @Override
+    public void update() {
+        if (this.world.isRemote && this.getFlowerPotItem() == Item.getItemFromBlock(ModBlocks.grave_rose)) {
+            if (this.world.getTotalWorldTime() % 15 == 0 && this.world.rand.nextInt(1) == 0) { // Spawn particles less frequently
+                double x = (double) this.pos.getX() + 0.5D;
+                double y = (double) this.pos.getY() + 0.4D;
+                double z = (double) this.pos.getZ() + 0.5D;
+                double xOffset = this.world.rand.nextDouble() * 0.6D - 0.3D;
+                double zOffset = this.world.rand.nextDouble() * 0.6D - 0.3D;
+                this.world.spawnParticle(EnumParticleTypes.SPELL, x + xOffset, y, z + zOffset, 0.0D, 0.1D, 1.0D);
+            }
+        }
     }
 
     @Override
@@ -62,6 +80,8 @@ public class TileEntityGraveMarker extends TileEntity
     {
         return this.writeToNBT(new NBTTagCompound());
     }
+
+
 
     public void setFlowerItemStack(ItemStack stack)
     {

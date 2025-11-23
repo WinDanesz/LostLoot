@@ -45,6 +45,11 @@ public class Settings {
         @Config.Name("Lost Cargo Biome Blacklist")
         @Config.Comment("Biomes where Lost Cargo cannot generate")
         public String[] lostCargoBiomeBlacklist = new String[0];
+
+		@Config.Name("Grave Rose Chance")
+		@Config.Comment("The chance of a rose turning into a grave rose when it is placed in a grave marker.")
+		@Config.RequiresMcRestart
+		public double grave_rose_chance = 0.95D;
     }
 
     @SuppressWarnings("unused")

@@ -67,10 +67,6 @@ public class BlockGraveMarker extends BlockLostLoot {
 	}
 
 	private boolean canBePotted(ItemStack stack) {
-		// This is a simplified check. In a real mod, you'd want a more robust way
-		// to determine if an item is a "flower" or can be placed in the grave marker.
-		// For now, we'll check against a few common flower items.
-		// You might want to use a tag system or a custom list of items.
 		return stack.getItem() instanceof net.minecraft.item.ItemBlock && (
 				getBlockFromItem(stack.getItem()) instanceof net.minecraft.block.BlockFlower ||
 				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.RED_MUSHROOM ||

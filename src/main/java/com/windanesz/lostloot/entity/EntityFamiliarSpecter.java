@@ -37,18 +37,22 @@ public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwna
 	public EntityFamiliarSpecter(World worldIn) {
 		super(worldIn);
 		this.setSize(0.6F, 1.8F);
-		this.isImmuneToFire = true;
 		this.moveHelper = new SpecterMoveHelper(this);
 		this.setNoGravity(true);
 	}
 
 	@Override
 	protected void initEntityAI() {
+		this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
 		this.tasks.addTask(4, new AIAttack(this));
-		this.tasks.addTask(5, new AIRandomFly(this));
+		this.tasks.addTask(5, new AIFollowOwner(this, 1.0D, 5.0F, 2.0F));
+		this.tasks.addTask(6, new AIRandomFly(this));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
-		this.targetTasks.addTask(2, new AIFindPlayerToAttack(this));
+		this.tasks.addTask(8, new EntityAILookIdle(this));
+
+		this.targetTasks.addTask(1, new AIOwnerHurtByTarget(this));
+		this.targetTasks.addTask(2, new AIOwnerHurtTarget(this));
+		this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true, new Class[0]));
 	}
 
 	@Override
@@ -129,16 +133,10 @@ public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwna
 		if (this.isOwner(source.getTrueSource())) {
 			return false;
 		}
-		if (source.getTrueSource() instanceof EntityPlayer) {
-			return super.attackEntityFrom(source, amount);
-		}
-		if (source.isProjectile() || source.isMagicDamage()) {
-			return super.attackEntityFrom(source, amount);
-		}
 		if (source == DamageSource.IN_WALL) {
 			return false;
 		}
-		return false;
+		return super.attackEntityFrom(source, amount);
 	}
 
 	@Override
@@ -256,45 +254,41 @@ public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwna
 					this.attackCooldown = 20;
 					this.dashCooldown = 20;
 
-					if (target instanceof EntityPlayer) {
-						Random random = this.parentEntity.getRNG();
-						EntityPlayer player = (EntityPlayer) target;
-						Vec3d playerLook = player.getLookVec();
+					Random random = this.parentEntity.getRNG();
+					Vec3d targetLook = target.getLookVec();
 
-						Vec3d forward = new Vec3d(playerLook.x, 0, playerLook.z).normalize();
-						Vec3d right = new Vec3d(-playerLook.z, 0, playerLook.x).normalize();
+					Vec3d forward = new Vec3d(targetLook.x, 0, targetLook.z).normalize();
+					Vec3d right = new Vec3d(-targetLook.z, 0, targetLook.x).normalize();
 
-						Vec3d[] directions = {
-								forward,
-								forward.scale(-1),
-								right,
-								right.scale(-1)
-						};
+					Vec3d[] directions = {
+							forward,
+							forward.scale(-1),
+							right,
+							right.scale(-1)
+					};
 
-						Vec3d chosenDir = directions[random.nextInt(directions.length)];
+					Vec3d chosenDir = directions[random.nextInt(directions.length)];
 
-						double distance = 2.0; //+ random.nextDouble() * 1.0; // 2-3 blocks from player
+					double distance = 2.0; //+ random.nextDouble() * 1.0; // 2-3 blocks from player
 
-						double destX = player.posX + chosenDir.x * distance;
-						double destY = player.posY + 1.0;
-						double destZ = player.posZ + chosenDir.z * distance;
+					double destX = target.posX + chosenDir.x * distance;
+					double destY = target.posY + 1.0;
+					double destZ = target.posZ + chosenDir.z * distance;
 
-						double moveVecX = destX - this.parentEntity.posX;
-						double moveVecY = destY - this.parentEntity.posY;
-						double moveVecZ = destZ - this.parentEntity.posZ;
-						double moveLen = MathHelper.sqrt(moveVecX * moveVecX + moveVecY * moveVecY + moveVecZ * moveVecZ);
+					double moveVecX = destX - this.parentEntity.posX;
+					double moveVecY = destY - this.parentEntity.posY;
+					double moveVecZ = destZ - this.parentEntity.posZ;
+					double moveLen = MathHelper.sqrt(moveVecX * moveVecX + moveVecY * moveVecY + moveVecZ * moveVecZ);
 
-						if (moveLen > 0) {
-							double dashSpeed = 1.8;
-							this.parentEntity.motionX = (moveVecX / moveLen) * dashSpeed;
-							this.parentEntity.motionY = (moveVecY / moveLen) * dashSpeed * 0.1;
-							this.parentEntity.motionZ = (moveVecZ / moveLen) * dashSpeed;
+					if (moveLen > 0) {
+						double dashSpeed = 1.8;
+						this.parentEntity.motionX = (moveVecX / moveLen) * dashSpeed;
+						this.parentEntity.motionY = (moveVecY / moveLen) * dashSpeed * 0.1;
+						this.parentEntity.motionZ = (moveVecZ / moveLen) * dashSpeed;
 
-							if (this.parentEntity.getMoveHelper() instanceof SpecterMoveHelper) {
-								((SpecterMoveHelper) this.parentEntity.getMoveHelper()).startCooldown(10);
-							}
-						}
-					}
+													if (this.parentEntity.getMoveHelper() instanceof SpecterMoveHelper) {
+														((SpecterMoveHelper) this.parentEntity.getMoveHelper()).startCooldown(20);
+													}					}
 				}
 			}
 		}
@@ -403,6 +397,124 @@ public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwna
 				this.parentEntity.motionY *= 0.5D;
 				this.parentEntity.motionZ *= 0.5D;
 			}
+		}
+	}
+
+	static class AIFollowOwner extends EntityAIBase {
+		private final EntityFamiliarSpecter specter;
+		private EntityLivingBase owner;
+		private final World world;
+		private final double followSpeed;
+		private final float minDist;
+		private final float maxDist;
+		private int timeToRecalcPath;
+
+		public AIFollowOwner(EntityFamiliarSpecter specter, double speed, float min, float max) {
+			this.specter = specter;
+			this.world = specter.world;
+			this.followSpeed = speed;
+			this.minDist = min;
+			this.maxDist = max;
+			this.setMutexBits(3);
+		}
+
+		public boolean shouldExecute() {
+			EntityLivingBase owner = this.specter.getOwner();
+
+			if (owner == null) {
+				return false;
+			} else if (this.specter.getDistanceSq(owner) < (double)(this.minDist * this.minDist)) {
+				return false;
+			} else {
+				this.owner = owner;
+				return true;
+			}
+		}
+
+		public boolean shouldContinueExecuting() {
+			return this.specter.getDistanceSq(this.owner) > (double)(this.maxDist * this.maxDist);
+		}
+
+		public void startExecuting() {
+			this.timeToRecalcPath = 0;
+		}
+
+		public void resetTask() {
+			this.owner = null;
+			this.specter.getMoveHelper().action = EntityMoveHelper.Action.WAIT;
+		}
+
+		public void updateTask() {
+			this.specter.getLookHelper().setLookPositionWithEntity(this.owner, 10.0F, (float)this.specter.getVerticalFaceSpeed());
+
+			if (--this.timeToRecalcPath <= 0) {
+				this.timeToRecalcPath = 10;
+				this.specter.getMoveHelper().setMoveTo(this.owner.posX, this.owner.posY + 1.5, this.owner.posZ, this.followSpeed);
+			}
+		}
+	}
+
+	static class AIOwnerHurtByTarget extends EntityAITarget {
+		EntityFamiliarSpecter specter;
+		EntityLivingBase attacker;
+		private int timestamp;
+
+		public AIOwnerHurtByTarget(EntityFamiliarSpecter specter) {
+			super(specter, false);
+			this.specter = specter;
+			this.setMutexBits(1);
+		}
+
+		public boolean shouldExecute() {
+			EntityLivingBase owner = this.specter.getOwner();
+			if (owner == null) {
+				return false;
+			} else {
+				this.attacker = owner.getRevengeTarget();
+				int i = owner.getRevengeTimer();
+				return i != this.timestamp && this.isSuitableTarget(this.attacker, false);
+			}
+		}
+
+		public void startExecuting() {
+			this.taskOwner.setAttackTarget(this.attacker);
+			EntityLivingBase owner = this.specter.getOwner();
+			if (owner != null) {
+				this.timestamp = owner.getRevengeTimer();
+			}
+			super.startExecuting();
+		}
+	}
+
+	static class AIOwnerHurtTarget extends EntityAITarget {
+		EntityFamiliarSpecter specter;
+		EntityLivingBase target;
+		private int timestamp;
+
+		public AIOwnerHurtTarget(EntityFamiliarSpecter specter) {
+			super(specter, false);
+			this.specter = specter;
+			this.setMutexBits(1);
+		}
+
+		public boolean shouldExecute() {
+			EntityLivingBase owner = this.specter.getOwner();
+			if (owner == null) {
+				return false;
+			} else {
+				this.target = owner.getLastAttackedEntity();
+				int i = owner.getLastAttackedEntityTime();
+				return i != this.timestamp && this.isSuitableTarget(this.target, false);
+			}
+		}
+
+		public void startExecuting() {
+			this.taskOwner.setAttackTarget(this.target);
+			EntityLivingBase owner = this.specter.getOwner();
+			if (owner != null) {
+				this.timestamp = owner.getLastAttackedEntityTime();
+			}
+			super.startExecuting();
 		}
 	}
 }

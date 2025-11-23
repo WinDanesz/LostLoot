@@ -1,6 +1,7 @@
 package com.windanesz.lostloot.client.renderer;
 
 import com.windanesz.lostloot.LostLoot;
+import com.windanesz.lostloot.client.model.ModelFamiliarSpecter;
 import com.windanesz.lostloot.client.model.ModelSpecter;
 import com.windanesz.lostloot.entity.EntityFamiliarSpecter;
 import net.minecraft.client.renderer.GlStateManager;
@@ -16,7 +17,7 @@ public class RenderFamiliarSpecter extends RenderLiving<EntityFamiliarSpecter> {
 	public static final ResourceLocation TEXTURE = new ResourceLocation(LostLoot.MODID, "textures/entity/specter_familiar.png");
 
 	public RenderFamiliarSpecter(RenderManager rendermanagerIn) {
-		super(rendermanagerIn, new ModelSpecter(), 0F);
+		super(rendermanagerIn, new ModelFamiliarSpecter(), 0F);
 	}
 
 	@Nullable
