@@ -35,6 +35,7 @@ public class ModBlocks {
     public static final Block loot_scene_dummy = placeholder();
     public static final Block stone_circle = placeholder();
     public static final Block rose = placeholder();
+    public static final Block grave_rose = placeholder();
 
     @Nonnull
     @SuppressWarnings("ConstantConditions")
@@ -53,6 +54,7 @@ public class ModBlocks {
         registerBlock(registry, "stone_circle", new BlockLostLoot(Material.ROCK).setBoundingBox(new AxisAlignedBB(0,0,0,1,0.1,1)));
         registerBlock(registry, "grave_marker", new BlockGraveMarker(Material.ROCK).setBoundingBox(new AxisAlignedBB(0,0,0,1,0.4,1)));
 		registerBlock(registry, "rose", new BlockRose());
+		registerBlock(registry, "grave_rose", new BlockRose());
     }
 
     public static void registerBlock(IForgeRegistry<Block> registry, String name, Block block) {
@@ -76,10 +78,9 @@ public class ModBlocks {
             net.minecraft.block.state.IBlockState state = event.getWorld().getBlockState(event.getPos());
             if (state.getBlock() == Blocks.DOUBLE_PLANT && state.getValue(BlockDoublePlant.VARIANT) == BlockDoublePlant.EnumPlantType.ROSE) {
                 // Drop two red flowers
-                net.minecraft.block.Block.spawnAsEntity(event.getWorld(), event.getPos(), new ItemStack(ModBlocks.rose, 2));
-				
-                // Damage shears
-                heldItem.damageItem(1, event.getEntityPlayer());
+                Block.spawnAsEntity(event.getWorld(), event.getPos(), new ItemStack(ModBlocks.rose, 2));
+                heldItem.damageItem(2, event.getEntityPlayer());
+				event.getWorld().setBlockState(event.getPos(), Blocks.AIR.getDefaultState(), 3);
                 event.setCanceled(true);
             }
         }

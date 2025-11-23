@@ -6,9 +6,9 @@ import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
-public class Loot {
+public class ModLoot {
 
-	private Loot() {
+	private ModLoot() {
 	}
 
 	/**

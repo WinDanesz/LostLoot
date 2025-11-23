@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
-public final class LLModels {
+public final class ModModels {
 
     /**
      * Keeps track of all items whose models have been registered manually to exclude them from automatic registry of
@@ -23,7 +23,7 @@ public final class LLModels {
     private static final List<Item> registeredItems = new ArrayList<>();
 
     // no instances
-    private LLModels() {
+    private ModModels() {
     }
 
     @SubscribeEvent

@@ -1,6 +1,6 @@
 {
   "parent": "block/cross",
   "textures": {
-    "cross": "lostloot:blocks/rose"
+    "cross": "lostloot:blocks/grave_rose"
   }
 }

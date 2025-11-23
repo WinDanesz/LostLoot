@@ -2,3 +2,5 @@ tile.lost_cargo.name=Lost Cargo
 entity.lostloot:specter.name=Specter
 item.lostloot:grave_rose.name=Grave Rose
 tile.lostloot:rose.name=Rose
+tile.lostloot:grave_rose.name=Grave Rose
+tile.lostloot:grave_rose.desc=

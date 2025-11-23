@@ -1,6 +1,7 @@
 package com.windanesz.lostloot.init;
 
 import com.windanesz.lostloot.LostLoot;
+import com.windanesz.lostloot.item.ItemGraveRose;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -15,9 +16,9 @@ import javax.annotation.Nonnull;
 
 @GameRegistry.ObjectHolder(LostLoot.MODID)
 @Mod.EventBusSubscriber
-public class Items {
+public class ModItems {
 
-	private Items() {
+	private ModItems() {
 	}
 
 	public static final Item grave_rose = placeholder();
@@ -32,7 +33,7 @@ public class Items {
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
 		IForgeRegistry<Item> registry = event.getRegistry();
-		registerItem(registry, "grave_rose", new Item());
+		registerItem(registry, "grave_rose", new ItemGraveRose(ModBlocks.grave_rose));
 		registerItemBlock(registry, ModBlocks.rose);
 		// Register ItemBlock for BlockLootScene
 	}

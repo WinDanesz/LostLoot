@@ -3,8 +3,10 @@ package com.windanesz.lostloot.client;
 import com.windanesz.lostloot.CommonProxy;
 import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.block.tile.TileEntityGraveMarker;
+import com.windanesz.lostloot.client.renderer.RenderFamiliarSpecter;
 import com.windanesz.lostloot.client.renderer.RenderSpecter;
 import com.windanesz.lostloot.client.renderer.TileEntityGraveMarkerRenderer;
+import com.windanesz.lostloot.entity.EntityFamiliarSpecter;
 import com.windanesz.lostloot.entity.EntitySpecter;
 import com.windanesz.lostloot.init.ModBlocks;
 import net.minecraft.client.Minecraft;
@@ -54,6 +56,7 @@ public class ClientProxy extends CommonProxy {
 
 	private void registerEntityRenderers() {
 		RenderingRegistry.registerEntityRenderingHandler(EntitySpecter.class, RenderSpecter::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityFamiliarSpecter.class, RenderFamiliarSpecter::new);
 	}
 
 	private void registerTileEntityRenderers() {

@@ -1,6 +1,7 @@
 package com.windanesz.lostloot.init;
 
 import com.windanesz.lostloot.LostLoot;
+import com.windanesz.lostloot.entity.EntityFamiliarSpecter;
 import com.windanesz.lostloot.entity.EntitySpecter;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -12,9 +13,9 @@ import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod.EventBusSubscriber
-public class Entities {
+public class ModEntities {
 
-	private Entities() {}
+	private ModEntities() {}
 
 
 	/**
@@ -50,7 +51,7 @@ public class Entities {
 
 		// projectile entities
 		registry.register(createEntry(EntitySpecter.class, "specter", TrackingType.LIVING).egg(0xebf2ff,0x6aeba6).build());
-		registry.register(createEntry(EntitySpecter.class, "specter_familiar", TrackingType.LIVING).egg(0xebf2ff,0x6aeba6).build());
+		registry.register(createEntry(EntityFamiliarSpecter.class, "specter_familiar", TrackingType.LIVING).egg(0xebf2ff,0x6aeba6).build());
 	}
 
 	/**

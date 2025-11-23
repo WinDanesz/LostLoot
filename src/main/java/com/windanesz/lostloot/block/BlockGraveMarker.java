@@ -79,7 +79,8 @@ public class BlockGraveMarker extends BlockLostLoot {
 				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.TALLGRASS ||
 				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.DEADBUSH ||
 				getBlockFromItem(stack.getItem()) == net.minecraft.init.Blocks.YELLOW_FLOWER ||
-				getBlockFromItem(stack.getItem()) == ModBlocks.rose
+				getBlockFromItem(stack.getItem()) == ModBlocks.rose ||
+				getBlockFromItem(stack.getItem()) == ModBlocks.grave_rose
 		);
 	}
 }

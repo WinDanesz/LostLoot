@@ -1,7 +1,7 @@
 package com.windanesz.lostloot;
 
 import com.windanesz.lostloot.init.ModBlocks;
-import com.windanesz.lostloot.init.Loot;
+import com.windanesz.lostloot.init.ModLoot;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -24,7 +24,7 @@ public class LostLoot {
     public void preInit(FMLPreInitializationEvent event) {
         proxy.preInit(event);
         ModBlocks.registerTileEntities();
-        Loot.register();
+        ModLoot.register();
 	}
 
 
