@@ -2,6 +2,7 @@ package com.windanesz.lostloot.init;
 
 import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.entity.EntityFamiliarSpecter;
+import com.windanesz.lostloot.entity.EntityModPainting;
 import com.windanesz.lostloot.entity.EntitySpecter;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -52,6 +53,7 @@ public class ModEntities {
 		// projectile entities
 		registry.register(createEntry(EntitySpecter.class, "specter", TrackingType.LIVING).egg(0xebf2ff,0x6aeba6).build());
 		registry.register(createEntry(EntityFamiliarSpecter.class, "specter_familiar", TrackingType.LIVING).egg(0xebf2ff,0x6aeba6).build());
+		registry.register(createEntry(EntityModPainting.class, "forest_painting", TrackingType.CONSTRUCT).build());
 	}
 
 	/**

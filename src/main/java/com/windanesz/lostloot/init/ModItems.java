@@ -1,6 +1,7 @@
 package com.windanesz.lostloot.init;
 
 import com.windanesz.lostloot.LostLoot;
+import com.windanesz.lostloot.item.ItemModPainting;
 import com.windanesz.lostloot.item.ItemGraveRose;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,6 +23,7 @@ public class ModItems {
 	}
 
 	public static final Item grave_rose = placeholder();
+	public static final Item forest_painting = placeholder();
 
 	@Nonnull
 	@SuppressWarnings("ConstantConditions")
@@ -35,6 +37,7 @@ public class ModItems {
 		IForgeRegistry<Item> registry = event.getRegistry();
 		registerItem(registry, "grave_rose", new ItemGraveRose(ModBlocks.grave_rose));
 		registerItemBlock(registry, ModBlocks.rose);
+		registerItem(registry, "forest_painting", new ItemModPainting());
 		// Register ItemBlock for BlockLootScene
 	}
 

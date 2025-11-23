@@ -1,0 +1,4 @@
+- do not make commits and do not run git operations
+- Our modding environment is 1.12.2 Minecraft Forge
+- You can find the vanilla (read-only) code for reference under C:\dev\LostLoot\build\rfg\minecraft-src\java\net\minecraft. When asked to implement logic similar to vanilla or existing mechanics, you should check references
+- do not try to run gradle tasks

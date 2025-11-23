@@ -1,0 +1,53 @@
+package com.windanesz.lostloot.item;
+
+import com.windanesz.lostloot.entity.EntityModPainting;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityHanging;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemHangingEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+
+public class ItemModPainting extends ItemHangingEntity {
+
+	public ItemModPainting() {
+		super(EntityModPainting.class);
+		this.setCreativeTab(CreativeTabs.DECORATIONS);
+	}
+
+	/**
+	 * Called when a Block is right-clicked with this Item
+	 */
+	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		ItemStack itemstack = player.getHeldItem(hand);
+		BlockPos blockpos = pos.offset(facing);
+
+		if (facing != EnumFacing.DOWN && facing != EnumFacing.UP && player.canPlayerEdit(blockpos, facing, itemstack)) {
+			EntityHanging entityhanging = this.createEntity(worldIn, blockpos, facing);
+
+			if (entityhanging != null && entityhanging.onValidSurface()) {
+				if (!worldIn.isRemote) {
+					entityhanging.playPlaceSound();
+					worldIn.spawnEntity(entityhanging);
+				}
+
+				itemstack.shrink(1);
+			}
+
+			return EnumActionResult.SUCCESS;
+		} else {
+			return EnumActionResult.FAIL;
+		}
+	}
+
+	@Nullable
+	private EntityHanging createEntity(World worldIn, BlockPos pos, EnumFacing clickedSide) {
+		return new EntityModPainting(worldIn, pos, clickedSide);
+	}
+}

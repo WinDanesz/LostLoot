@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "lostloot:blocks/me_in_the_forest"
+    }
+}
