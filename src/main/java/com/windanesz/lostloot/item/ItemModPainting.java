@@ -1,10 +1,8 @@
 package com.windanesz.lostloot.item;
 
 import com.windanesz.lostloot.entity.EntityModPainting;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemHangingEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -14,11 +12,9 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class ItemModPainting extends ItemHangingEntity {
+public class ItemModPainting extends Item {
 
 	public ItemModPainting() {
-		super(EntityModPainting.class);
-		this.setCreativeTab(CreativeTabs.DECORATIONS);
 	}
 
 	/**
@@ -29,15 +25,16 @@ public class ItemModPainting extends ItemHangingEntity {
 		BlockPos blockpos = pos.offset(facing);
 
 		if (facing != EnumFacing.DOWN && facing != EnumFacing.UP && player.canPlayerEdit(blockpos, facing, itemstack)) {
-			EntityHanging entityhanging = this.createEntity(worldIn, blockpos, facing);
+			EntityModPainting painting = this.createEntity(worldIn, blockpos, facing);
 
-			if (entityhanging != null && entityhanging.onValidSurface()) {
+			if (painting != null && painting.onValidSurface()) {
 				if (!worldIn.isRemote) {
-					entityhanging.playPlaceSound();
-					worldIn.spawnEntity(entityhanging);
+					painting.playPlaceSound();
+					painting.setProperties(facing.getHorizontalAngle(), 32, 32, "forest");
+					worldIn.spawnEntity(painting);
+					itemstack.shrink(1);
 				}
 
-				itemstack.shrink(1);
 			}
 
 			return EnumActionResult.SUCCESS;
@@ -46,8 +43,9 @@ public class ItemModPainting extends ItemHangingEntity {
 		}
 	}
 
+
 	@Nullable
-	private EntityHanging createEntity(World worldIn, BlockPos pos, EnumFacing clickedSide) {
+	private EntityModPainting createEntity(World worldIn, BlockPos pos, EnumFacing clickedSide) {
 		return new EntityModPainting(worldIn, pos, clickedSide);
 	}
 }
