@@ -2,6 +2,7 @@ package com.windanesz.lostloot.client.renderer;
 
 import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.entity.EntityModPainting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -15,9 +16,8 @@ import net.minecraft.util.ResourceLocation;
 import javax.annotation.Nullable;
 
 public class RenderModPainting extends Render<EntityModPainting> {
-
+	
 	private static final ResourceLocation TEXTURE = new ResourceLocation(LostLoot.MODID, "textures/blocks/paintings.png");
-	private float rotation = -1f;
 
 	public RenderModPainting(RenderManager renderManager) {
 		super(renderManager);
@@ -25,15 +25,13 @@ public class RenderModPainting extends Render<EntityModPainting> {
 
 	@Override
 	public void doRender(EntityModPainting entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		if (rotation == -1) {
-			//entity.getDataManager().get(ROTATION)
-		}
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
 		GlStateManager.rotate(180.0F - entity.getRotation(), 0.0F, 1.0F, 0.0F);
 		GlStateManager.enableRescaleNormal();
 		this.bindEntityTexture(entity);
-		//EntityPainting.EnumArt entitypainting$enumart = entity.art;
+	//	GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+	//	GlStateManager.translate(0, -2, 0);
 		float f = 0.0625F;
 		GlStateManager.scale(0.0625F, 0.0625F, 0.0625F);
 
@@ -43,7 +41,17 @@ public class RenderModPainting extends Render<EntityModPainting> {
 			GlStateManager.enableOutlineMode(this.getTeamColor(entity));
 		}
 
-		this.renderPainting(entity, 32, 32, 0, 0,0);
+		this.renderPainting(entity, 32, 32, 0, 0);
+
+		// Render player torso and head
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 0, -0.01); //Slightly offset to prevent z-fighting
+		GlStateManager.translate(0, -10, 0); // Move down by 16 pixels
+		ResourceLocation skin = Minecraft.getMinecraft().player.getLocationSkin();
+		bindTexture(skin);
+		renderPlayerSkin(entity);
+		GlStateManager.popMatrix();
+
 
 		if (this.renderOutlines)
 		{
@@ -62,7 +70,7 @@ public class RenderModPainting extends Render<EntityModPainting> {
 		return TEXTURE;
 	}
 
-	private void renderPainting(EntityModPainting painting, float width, float height, float textureU, float textureV, float rotationYaw) {
+	private void renderPainting(EntityModPainting painting, int width, int height, int textureU, int textureV) {
 		float canvasSize = 128f;
 		float f = (float)(-width) / 2.0F;
 		float f1 = (float)(-height) / 2.0F;
@@ -123,5 +131,41 @@ public class RenderModPainting extends Render<EntityModPainting> {
 				tessellator.draw();
 			}
 		}
+	}
+
+	private void renderPlayerSkin(EntityModPainting painting) {
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuffer();
+
+		float scale = 1.0f;
+		float headSize = 8 * scale;
+		float bodyWidth = 8 * scale;
+		float bodyHeight = 10 * scale; // Only render top 6 pixels of the torso
+
+		float x0 = -bodyWidth / 2;
+		float x1 = bodyWidth / 2;
+
+		float bodyY0 = -bodyHeight / 2;
+		float bodyY1 = bodyHeight / 2;
+
+		float headY0 = bodyY1;
+		float headY1 = bodyY1 + headSize;
+
+		float skinWidth = 64f;
+		float skinHeight = 64f;
+
+		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+		// Body
+		bufferbuilder.pos(x1, bodyY0, -0.5D).tex(28 / skinWidth, 26 / skinHeight).endVertex(); // Use top half of torso texture
+		bufferbuilder.pos(x0, bodyY0, -0.5D).tex(20 / skinWidth, 26 / skinHeight).endVertex(); // Use top half of torso texture
+		bufferbuilder.pos(x0, bodyY1, -0.5D).tex(20 / skinWidth, 20 / skinHeight).endVertex();
+		bufferbuilder.pos(x1, bodyY1, -0.5D).tex(28 / skinWidth, 20 / skinHeight).endVertex();
+
+		// Head
+		bufferbuilder.pos(x1, headY0, -0.5D).tex(16 / skinWidth, 16 / skinHeight).endVertex();
+		bufferbuilder.pos(x0, headY0, -0.5D).tex(8 / skinWidth, 16 / skinHeight).endVertex();
+		bufferbuilder.pos(x0, headY1, -0.5D).tex(8 / skinWidth, 8 / skinHeight).endVertex();
+		bufferbuilder.pos(x1, headY1, -0.5D).tex(16 / skinWidth, 8 / skinHeight).endVertex();
+		tessellator.draw();
 	}
 }
