@@ -140,7 +140,8 @@ public class RenderModPainting extends Render<EntityModPainting> {
 		float scale = 1.0f;
 		float headSize = 8 * scale;
 		float bodyWidth = 8 * scale;
-		float bodyHeight = 10 * scale; // Only render top 6 pixels of the torso
+		float bodyHeight = 10 * scale;
+		float armWidth = 4 * scale;
 
 		float x0 = -bodyWidth / 2;
 		float x1 = bodyWidth / 2;
@@ -160,6 +161,18 @@ public class RenderModPainting extends Render<EntityModPainting> {
 		bufferbuilder.pos(x0, bodyY0, -0.5D).tex(20 / skinWidth, 26 / skinHeight).endVertex(); // Use top half of torso texture
 		bufferbuilder.pos(x0, bodyY1, -0.5D).tex(20 / skinWidth, 20 / skinHeight).endVertex();
 		bufferbuilder.pos(x1, bodyY1, -0.5D).tex(28 / skinWidth, 20 / skinHeight).endVertex();
+
+		// Right Arm
+		bufferbuilder.pos(x0, bodyY0, -0.5D).tex(48 / skinWidth, 26 / skinHeight).endVertex();
+		bufferbuilder.pos(x0 - armWidth, bodyY0, -0.5D).tex(44 / skinWidth, 26 / skinHeight).endVertex();
+		bufferbuilder.pos(x0 - armWidth, bodyY1, -0.5D).tex(44 / skinWidth, 20 / skinHeight).endVertex();
+		bufferbuilder.pos(x0, bodyY1, -0.5D).tex(48 / skinWidth, 20 / skinHeight).endVertex();
+
+		// Left Arm
+		bufferbuilder.pos(x1 + armWidth, bodyY0, -0.5D).tex(40 / skinWidth, 58 / skinHeight).endVertex();
+		bufferbuilder.pos(x1, bodyY0, -0.5D).tex(36 / skinWidth, 58 / skinHeight).endVertex();
+		bufferbuilder.pos(x1, bodyY1, -0.5D).tex(36 / skinWidth, 52 / skinHeight).endVertex();
+		bufferbuilder.pos(x1 + armWidth, bodyY1, -0.5D).tex(40 / skinWidth, 52 / skinHeight).endVertex();
 
 		// Head
 		bufferbuilder.pos(x1, headY0, -0.5D).tex(16 / skinWidth, 16 / skinHeight).endVertex();
