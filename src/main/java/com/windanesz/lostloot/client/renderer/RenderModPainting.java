@@ -1,6 +1,7 @@
 package com.windanesz.lostloot.client.renderer;
 
 import com.windanesz.lostloot.LostLoot;
+import com.windanesz.lostloot.Settings;
 import com.windanesz.lostloot.entity.EntityModPainting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -142,6 +143,7 @@ public class RenderModPainting extends Render<EntityModPainting> {
 		float bodyWidth = 8 * scale;
 		float bodyHeight = 10 * scale;
 		float armWidth = 4 * scale;
+		float overlayScale = 1.0f;
 
 		float x0 = -bodyWidth / 2;
 		float x1 = bodyWidth / 2;
@@ -157,20 +159,20 @@ public class RenderModPainting extends Render<EntityModPainting> {
 
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
 		// Body
-		bufferbuilder.pos(x1, bodyY0, -0.5D).tex(28 / skinWidth, 26 / skinHeight).endVertex(); // Use top half of torso texture
-		bufferbuilder.pos(x0, bodyY0, -0.5D).tex(20 / skinWidth, 26 / skinHeight).endVertex(); // Use top half of torso texture
+		bufferbuilder.pos(x1, bodyY0, -0.5D).tex(28 / skinWidth, 30 / skinHeight).endVertex();
+		bufferbuilder.pos(x0, bodyY0, -0.5D).tex(20 / skinWidth, 30 / skinHeight).endVertex();
 		bufferbuilder.pos(x0, bodyY1, -0.5D).tex(20 / skinWidth, 20 / skinHeight).endVertex();
 		bufferbuilder.pos(x1, bodyY1, -0.5D).tex(28 / skinWidth, 20 / skinHeight).endVertex();
 
 		// Right Arm
-		bufferbuilder.pos(x0, bodyY0, -0.5D).tex(48 / skinWidth, 26 / skinHeight).endVertex();
-		bufferbuilder.pos(x0 - armWidth, bodyY0, -0.5D).tex(44 / skinWidth, 26 / skinHeight).endVertex();
+		bufferbuilder.pos(x0, bodyY0, -0.5D).tex(48 / skinWidth, 30 / skinHeight).endVertex();
+		bufferbuilder.pos(x0 - armWidth, bodyY0, -0.5D).tex(44 / skinWidth, 30 / skinHeight).endVertex();
 		bufferbuilder.pos(x0 - armWidth, bodyY1, -0.5D).tex(44 / skinWidth, 20 / skinHeight).endVertex();
 		bufferbuilder.pos(x0, bodyY1, -0.5D).tex(48 / skinWidth, 20 / skinHeight).endVertex();
 
 		// Left Arm
-		bufferbuilder.pos(x1 + armWidth, bodyY0, -0.5D).tex(40 / skinWidth, 58 / skinHeight).endVertex();
-		bufferbuilder.pos(x1, bodyY0, -0.5D).tex(36 / skinWidth, 58 / skinHeight).endVertex();
+		bufferbuilder.pos(x1 + armWidth, bodyY0, -0.5D).tex(40 / skinWidth, 62 / skinHeight).endVertex();
+		bufferbuilder.pos(x1, bodyY0, -0.5D).tex(36 / skinWidth, 62 / skinHeight).endVertex();
 		bufferbuilder.pos(x1, bodyY1, -0.5D).tex(36 / skinWidth, 52 / skinHeight).endVertex();
 		bufferbuilder.pos(x1 + armWidth, bodyY1, -0.5D).tex(40 / skinWidth, 52 / skinHeight).endVertex();
 
@@ -179,6 +181,33 @@ public class RenderModPainting extends Render<EntityModPainting> {
 		bufferbuilder.pos(x0, headY0, -0.5D).tex(8 / skinWidth, 16 / skinHeight).endVertex();
 		bufferbuilder.pos(x0, headY1, -0.5D).tex(8 / skinWidth, 8 / skinHeight).endVertex();
 		bufferbuilder.pos(x1, headY1, -0.5D).tex(16 / skinWidth, 8 / skinHeight).endVertex();
+
+		// --- Overlay Layers ---
+
+		// Body Overlay
+		bufferbuilder.pos(x1 * overlayScale, bodyY0 * overlayScale, -0.51D).tex(28 / skinWidth, 46 / skinHeight).endVertex();
+		bufferbuilder.pos(x0 * overlayScale, bodyY0 * overlayScale, -0.51D).tex(20 / skinWidth, 46 / skinHeight).endVertex();
+		bufferbuilder.pos(x0 * overlayScale, bodyY1 * overlayScale, -0.51D).tex(20 / skinWidth, 36 / skinHeight).endVertex();
+		bufferbuilder.pos(x1 * overlayScale, bodyY1 * overlayScale, -0.51D).tex(28 / skinWidth, 36 / skinHeight).endVertex();
+
+		// Right Arm Overlay
+		bufferbuilder.pos(x0 * overlayScale, bodyY0 * overlayScale, -0.51D).tex(48 / skinWidth, 46 / skinHeight).endVertex();
+		bufferbuilder.pos((x0 - armWidth) * overlayScale, bodyY0 * overlayScale, -0.51D).tex(44 / skinWidth, 46 / skinHeight).endVertex();
+		bufferbuilder.pos((x0 - armWidth) * overlayScale, bodyY1 * overlayScale, -0.51D).tex(44 / skinWidth, 36 / skinHeight).endVertex();
+		bufferbuilder.pos(x0 * overlayScale, bodyY1 * overlayScale, -0.51D).tex(48 / skinWidth, 36 / skinHeight).endVertex();
+
+		// Left Arm Overlay
+		bufferbuilder.pos((x1 + armWidth) * overlayScale, bodyY0 * overlayScale, -0.51D).tex(56 / skinWidth, 62 / skinHeight).endVertex();
+		bufferbuilder.pos(x1 * overlayScale, bodyY0 * overlayScale, -0.51D).tex(52 / skinWidth, 62 / skinHeight).endVertex();
+		bufferbuilder.pos(x1 * overlayScale, bodyY1 * overlayScale, -0.51D).tex(52 / skinWidth, 52 / skinHeight).endVertex();
+		bufferbuilder.pos((x1 + armWidth) * overlayScale, bodyY1 * overlayScale, -0.51D).tex(56 / skinWidth, 52 / skinHeight).endVertex();
+
+		// Head Overlay
+		bufferbuilder.pos(x1 * overlayScale, headY0 * overlayScale, -0.51D).tex(48 / skinWidth, 16 / skinHeight).endVertex();
+		bufferbuilder.pos(x0 * overlayScale, headY0 * overlayScale, -0.51D).tex(40 / skinWidth, 16 / skinHeight).endVertex();
+		bufferbuilder.pos(x0 * overlayScale, headY1 * overlayScale, -0.51D).tex(40 / skinWidth, 8 / skinHeight).endVertex();
+		bufferbuilder.pos(x1 * overlayScale, headY1 * overlayScale, -0.51D).tex(48 / skinWidth, 8 / skinHeight).endVertex();
+
 		tessellator.draw();
 	}
 }

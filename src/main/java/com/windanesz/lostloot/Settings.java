@@ -27,6 +27,10 @@ public class Settings {
     @Config.LangKey("settings.lostloot:general_settings")
     public static WorldgenSettings worldgenSettings = new WorldgenSettings();
 
+    @Config.Name("Client Settings")
+    @Config.LangKey("settings.lostloot:client_settings")
+    public static ClientSettings clientSettings = new ClientSettings();
+
     public static class WorldgenSettings {
 
         @Config.Name("Lost Loot Dimensions")
@@ -50,6 +54,9 @@ public class Settings {
 		@Config.Comment("The chance of a rose turning into a grave rose when it is placed in a grave marker.")
 		@Config.RequiresMcRestart
 		public double grave_rose_chance = 0.95D;
+    }
+
+    public static class ClientSettings {
     }
 
     @SuppressWarnings("unused")

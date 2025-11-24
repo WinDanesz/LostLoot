@@ -247,6 +247,10 @@ public class EntityModPainting extends Entity {
 		compound.setInteger("TileX", blockpos.getX());
 		compound.setInteger("TileY", blockpos.getY());
 		compound.setInteger("TileZ", blockpos.getZ());
+		compound.setFloat("Rotation", this.getRotation());
+		compound.setInteger("SizeX", this.getXSize());
+		compound.setInteger("SizeY", this.getYSize());
+		compound.setString("Painting", this.getPainting());
 	}
 
 	/**
@@ -255,6 +259,7 @@ public class EntityModPainting extends Entity {
 	public void readEntityFromNBT(NBTTagCompound compound) {
 		this.hangingPosition = new BlockPos(compound.getInteger("TileX"), compound.getInteger("TileY"), compound.getInteger("TileZ"));
 		this.updateFacingWithBoundingBox(EnumFacing.byHorizontalIndex(compound.getByte("Facing")));
+		this.setProperties(compound.getFloat("Rotation"), compound.getInteger("SizeX"), compound.getInteger("SizeY"), compound.getString("Painting"));
 	}
 
 	public int getWidthPixels() {
