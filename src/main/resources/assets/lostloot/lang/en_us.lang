@@ -1,3 +1,6 @@
+commands.lostloot.gethauntingprogress.usage=/gethauntingprogress <player>
+commands.lostloot.gethauntingprogress.success=%s's haunting progress is %s
+commands.lostloot.gethauntingprogress.error=Could not get haunting capability for player %s
 tile.lost_cargo.name=Lost Cargo
 entity.lostloot:specter.name=Specter
 item.lostloot:grave_rose.name=Grave Rose

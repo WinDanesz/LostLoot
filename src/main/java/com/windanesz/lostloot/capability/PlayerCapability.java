@@ -29,9 +29,18 @@ public class PlayerCapability implements INBTSerializable<NBTTagCompound> {
 
 	// This annotation does some crazy Forge magic behind the scenes and assigns this field a value.
 	@CapabilityInject(PlayerCapability.class)
-	private static final Capability<PlayerCapability> DATA_CAPABILITY = null;
+	private static final Capability<PlayerCapability> PLAYER_CAPABILITY = null;
 
 	private final EntityPlayer player;
+
+	public int getHauntingProgress() {
+		return hauntingProgress;
+	}
+
+	public void setHauntingProgress(int hauntingProgress) {
+		this.hauntingProgress = hauntingProgress;
+	}
+
 	public int hauntingProgress = 0;
 
 	public PlayerCapability() {
@@ -65,7 +74,7 @@ public class PlayerCapability implements INBTSerializable<NBTTagCompound> {
 	 * Returns the WizardData instance for the specified player.
 	 */
 	public static PlayerCapability get(EntityPlayer player) {
-		return player.getCapability(DATA_CAPABILITY, null);
+		return player.getCapability(PLAYER_CAPABILITY, null);
 	}
 
 	/**
@@ -167,14 +176,14 @@ public class PlayerCapability implements INBTSerializable<NBTTagCompound> {
 
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-			return capability == DATA_CAPABILITY;
+			return capability == PLAYER_CAPABILITY;
 		}
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 
-			if (capability == DATA_CAPABILITY) {
-				return DATA_CAPABILITY.cast(data);
+			if (capability == PLAYER_CAPABILITY) {
+				return PLAYER_CAPABILITY.cast(data);
 			}
 
 			return null;

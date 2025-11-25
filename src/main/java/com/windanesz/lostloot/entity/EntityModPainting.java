@@ -27,6 +27,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.Validate;
 
+import java.util.Optional;
+import java.util.UUID;
 import javax.annotation.Nullable;
 
 public class EntityModPainting extends Entity {
@@ -35,6 +37,7 @@ public class EntityModPainting extends Entity {
 	protected static final DataParameter<String> PAINTING = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.STRING);
 	protected static final DataParameter<Integer> SIZE_X = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.VARINT);
 	protected static final DataParameter<Integer> SIZE_Y = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.VARINT);
+	protected static final DataParameter<Optional<UUID>> UUID = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
 	private static final Predicate<Entity> IS_HANGING_ENTITY = new Predicate<Entity>() {
 		public boolean apply(@Nullable Entity p_apply_1_) {
@@ -67,6 +70,7 @@ public class EntityModPainting extends Entity {
 		this.dataManager.register(PAINTING, "forest");
 		this.dataManager.register(SIZE_X, 32);
 		this.dataManager.register(SIZE_Y, 32);
+		this.dataManager.register(UUID, Optional.empty());
 	}
 
 	/**
@@ -251,6 +255,10 @@ public class EntityModPainting extends Entity {
 		compound.setInteger("SizeX", this.getXSize());
 		compound.setInteger("SizeY", this.getYSize());
 		compound.setString("Painting", this.getPainting());
+		this.getUniqueIDOptional().ifPresent(uuid -> compound.setString("UUID", uuid.toString()));
+		if (this.getUniqueIDOptional().isPresent()) {
+			compound.setString("UUID", this.getUniqueIDOptional().get().toString());
+		}
 	}
 
 	/**
@@ -260,6 +268,13 @@ public class EntityModPainting extends Entity {
 		this.hangingPosition = new BlockPos(compound.getInteger("TileX"), compound.getInteger("TileY"), compound.getInteger("TileZ"));
 		this.updateFacingWithBoundingBox(EnumFacing.byHorizontalIndex(compound.getByte("Facing")));
 		this.setProperties(compound.getFloat("Rotation"), compound.getInteger("SizeX"), compound.getInteger("SizeY"), compound.getString("Painting"));
+		if (compound.hasKey("UUID", 8)) {
+			try {
+				this.setUniqueID(java.util.UUID.fromString(compound.getString("UUID")));
+			} catch (IllegalArgumentException e) {
+				// Ignore invalid UUID
+			}
+		}
 	}
 
 	public int getWidthPixels() {
@@ -394,5 +409,18 @@ public class EntityModPainting extends Entity {
    public String getPainting() {
 		return this.dataManager.get(PAINTING);
    }
+
+	public Optional<UUID> getUniqueIDOptional() {
+		return this.dataManager.get(UUID);
+	}
+
+	@Nullable
+	public UUID getUniqueID() {
+		return this.getUniqueIDOptional().orElse(null);
+	}
+
+	public void setUniqueID(@Nullable UUID uuid) {
+		this.dataManager.set(UUID, Optional.ofNullable(uuid));
+	}
 
 }
