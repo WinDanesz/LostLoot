@@ -1,7 +1,9 @@
 package com.windanesz.lostloot;
 
+import com.windanesz.lostloot.capability.PlayerCapability;
 import com.windanesz.lostloot.init.ModBlocks;
 import com.windanesz.lostloot.init.ModLoot;
+import com.windanesz.lostloot.network.PacketHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -13,6 +15,9 @@ import org.apache.logging.log4j.Logger;
 @Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION)
 public class LostLoot {
 
+	/**
+	* title-cased modname
+	*/
     public static final String MODNAME = "LostLoot";
     public static final String MODID = Tags.MOD_ID;
     public static final Logger LOGGER = LogManager.getLogger(Tags.MOD_NAME);
@@ -26,6 +31,7 @@ public class LostLoot {
         proxy.preInit(event);
         ModBlocks.registerTileEntities();
         ModLoot.register();
+		PlayerCapability.register();
 	}
 
 
@@ -33,5 +39,6 @@ public class LostLoot {
     public void init(FMLInitializationEvent event) {
         GameRegistry.registerWorldGenerator(new LLWorldGen(), 0);
 		proxy.registerColorHandlers();
+		PacketHandler.initPackets();
     }
 }

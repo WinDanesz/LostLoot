@@ -3,6 +3,7 @@ package com.windanesz.lostloot.client;
 import com.windanesz.lostloot.CommonProxy;
 import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.block.tile.TileEntityGraveMarker;
+import com.windanesz.lostloot.capability.PlayerCapability;
 import com.windanesz.lostloot.client.renderer.RenderFamiliarSpecter;
 import com.windanesz.lostloot.client.renderer.RenderModPainting;
 import com.windanesz.lostloot.client.renderer.RenderSpecter;
@@ -11,6 +12,7 @@ import com.windanesz.lostloot.entity.EntityFamiliarSpecter;
 import com.windanesz.lostloot.entity.EntityModPainting;
 import com.windanesz.lostloot.entity.EntitySpecter;
 import com.windanesz.lostloot.init.ModBlocks;
+import com.windanesz.lostloot.packet.PacketPlayerSync;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -78,4 +80,12 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomMeshDefinition(item, s -> new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 
+	@Override
+	public void handlePlayerSyncPacket(PacketPlayerSync.Message message) {
+		PlayerCapability data = PlayerCapability.get(Minecraft.getMinecraft().player);
+
+		if (data != null) {
+			data.hauntingProgress = message.hauntedProgress;
+		}
+	}
 }
