@@ -31,7 +31,7 @@ public class ItemModPainting extends Item {
 				if (!worldIn.isRemote) {
 					painting.playPlaceSound();
 					painting.setProperties(facing.getHorizontalAngle(), 32, 32, "forest");
-					painting.setUniqueID(player.getUniqueID());
+					painting.setOwnerId(player.getUniqueID());
 					worldIn.spawnEntity(painting);
 					itemstack.shrink(1);
 				}

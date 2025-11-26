@@ -1,9 +1,19 @@
 package com.windanesz.lostloot;
 
+import com.mojang.authlib.GameProfileRepository;
+import com.mojang.authlib.minecraft.MinecraftSessionService;
+import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.windanesz.lostloot.capability.PlayerCapability;
 import com.windanesz.lostloot.init.ModBlocks;
 import com.windanesz.lostloot.init.ModLoot;
 import com.windanesz.lostloot.network.PacketHandler;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.server.management.PlayerProfileCache;
+import net.minecraft.tileentity.TileEntitySkull;
+import net.minecraft.util.ReportedException;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -12,6 +22,9 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.util.UUID;
 
 @Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION)
 public class LostLoot {

@@ -1,23 +1,26 @@
 package com.windanesz.lostloot.client.renderer;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.windanesz.lostloot.LostLoot;
-import com.windanesz.lostloot.Settings;
 import com.windanesz.lostloot.entity.EntityModPainting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.item.EntityPainting;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.UUID;
 
 public class RenderModPainting extends Render<EntityModPainting> {
-	
+
 	private static final ResourceLocation TEXTURE = new ResourceLocation(LostLoot.MODID, "textures/blocks/paintings.png");
 
 	public RenderModPainting(RenderManager renderManager) {
@@ -25,45 +28,61 @@ public class RenderModPainting extends Render<EntityModPainting> {
 	}
 
 	@Override
-	public void doRender(EntityModPainting entity, double x, double y, double z, float entityYaw, float partialTicks) {
+	public void doRender(EntityModPainting painting, double x, double y, double z, float entityYaw, float partialTicks) {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
-		GlStateManager.rotate(180.0F - entity.getRotation(), 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(180.0F - painting.getRotation(), 0.0F, 1.0F, 0.0F);
 		GlStateManager.enableRescaleNormal();
-		this.bindEntityTexture(entity);
-	//	GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-	//	GlStateManager.translate(0, -2, 0);
+		this.bindEntityTexture(painting);
+		//	GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+		//	GlStateManager.translate(0, -2, 0);
 		float f = 0.0625F;
 		GlStateManager.scale(0.0625F, 0.0625F, 0.0625F);
 
-		if (this.renderOutlines)
-		{
+		if (this.renderOutlines) {
 			GlStateManager.enableColorMaterial();
-			GlStateManager.enableOutlineMode(this.getTeamColor(entity));
+			GlStateManager.enableOutlineMode(this.getTeamColor(painting));
 		}
 
-		this.renderPainting(entity, 32, 32, 0, 0);
+		this.renderPainting(painting, 32, 32, 0, 0);
 
 		// Render player torso and head
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 0, -0.01); //Slightly offset to prevent z-fighting
 		GlStateManager.translate(0, -10, 0); // Move down by 16 pixels
-		ResourceLocation skin = Minecraft.getMinecraft().player.getLocationSkin();
+		ResourceLocation skin = DefaultPlayerSkin.getDefaultSkinLegacy();
+		//ResourceLocation skin = Minecraft.getMinecraft().player.getLocationSkin();
 		bindTexture(skin);
-		renderPlayerSkin(entity);
+		GameProfile profile = painting.getPlayerProfile();
+		if (profile != null) {
+			Minecraft minecraft = Minecraft.getMinecraft();
+			Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = minecraft.getSkinManager().loadSkinFromCache(profile);
+
+			if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+				skin = minecraft.getSkinManager().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
+			} else {
+				UUID uuid = EntityPlayer.getUUID(profile);
+				skin = DefaultPlayerSkin.getDefaultSkin(uuid);
+			}
+		}
+
+		this.bindTexture(skin);
+		renderPlayerSkin(painting);
 		GlStateManager.popMatrix();
 
 
-		if (this.renderOutlines)
-		{
+		if (this.renderOutlines) {
 			GlStateManager.disableOutlineMode();
 			GlStateManager.disableColorMaterial();
 		}
 
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.popMatrix();
-		super.doRender(entity, x, y, z, entityYaw, partialTicks);
+		super.doRender(painting, x, y, z, entityYaw, partialTicks);
 	}
+
+
+
 
 	@Nullable
 	@Override
@@ -73,8 +92,8 @@ public class RenderModPainting extends Render<EntityModPainting> {
 
 	private void renderPainting(EntityModPainting painting, int width, int height, int textureU, int textureV) {
 		float canvasSize = 128f;
-		float f = (float)(-width) / 2.0F;
-		float f1 = (float)(-height) / 2.0F;
+		float f = (float) (-width) / 2.0F;
+		float f1 = (float) (-height) / 2.0F;
 		float f2 = 0.5F;
 		float f3 = 0.75F;
 		float f4 = 0.8125F;
@@ -89,46 +108,44 @@ public class RenderModPainting extends Render<EntityModPainting> {
 		float f13 = 0.0F;
 		float f14 = 0.0625F;
 
-		for (int i = 0; i < width / 16; ++i)
-		{
-			for (int j = 0; j < height / 16; ++j)
-			{
-				float f15 = f + (float)((i + 1) * 16);
-				float f16 = f + (float)(i * 16);
-				float f17 = f1 + (float)((j + 1) * 16);
-				float f18 = f1 + (float)(j * 16);
+		for (int i = 0; i < width / 16; ++i) {
+			for (int j = 0; j < height / 16; ++j) {
+				float f15 = f + (float) ((i + 1) * 16);
+				float f16 = f + (float) (i * 16);
+				float f17 = f1 + (float) ((j + 1) * 16);
+				float f18 = f1 + (float) (j * 16);
 				//this.setLightmap(painting, (f15 + f16) / 2.0F, (f17 + f18) / 2.0F);
-				float f19 = (float)(textureU + width - i * 16) / canvasSize;
-				float f20 = (float)(textureU + width - (i + 1) * 16) / canvasSize;
-				float f21 = (float)(textureV + height - j * 16) / canvasSize;
-				float f22 = (float)(textureV + height - (j + 1) * 16) / canvasSize;
+				float f19 = (float) (textureU + width - i * 16) / canvasSize;
+				float f20 = (float) (textureU + width - (i + 1) * 16) / canvasSize;
+				float f21 = (float) (textureV + height - j * 16) / canvasSize;
+				float f22 = (float) (textureV + height - (j + 1) * 16) / canvasSize;
 				Tessellator tessellator = Tessellator.getInstance();
 				BufferBuilder bufferbuilder = tessellator.getBuffer();
 				bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
-				bufferbuilder.pos((double)f15, (double)f18, -0.5D).tex((double)f20, (double)f21).normal(0.0F, 0.0F, -1.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f18, -0.5D).tex((double)f19, (double)f21).normal(0.0F, 0.0F, -1.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f17, -0.5D).tex((double)f19, (double)f22).normal(0.0F, 0.0F, -1.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f17, -0.5D).tex((double)f20, (double)f22).normal(0.0F, 0.0F, -1.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f17, 0.5D).tex(0.75D, 0.0D).normal(0.0F, 0.0F, 1.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f17, 0.5D).tex(0.8125D, 0.0D).normal(0.0F, 0.0F, 1.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f18, 0.5D).tex(0.8125D, 0.0625D).normal(0.0F, 0.0F, 1.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f18, 0.5D).tex(0.75D, 0.0625D).normal(0.0F, 0.0F, 1.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f17, -0.5D).tex(0.75D, 0.001953125D).normal(0.0F, 1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f17, -0.5D).tex(0.8125D, 0.001953125D).normal(0.0F, 1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f17, 0.5D).tex(0.8125D, 0.001953125D).normal(0.0F, 1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f17, 0.5D).tex(0.75D, 0.001953125D).normal(0.0F, 1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f18, 0.5D).tex(0.75D, 0.001953125D).normal(0.0F, -1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f18, 0.5D).tex(0.8125D, 0.001953125D).normal(0.0F, -1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f18, -0.5D).tex(0.8125D, 0.001953125D).normal(0.0F, -1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f18, -0.5D).tex(0.75D, 0.001953125D).normal(0.0F, -1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f17, 0.5D).tex(0.751953125D, 0.0D).normal(-1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f18, 0.5D).tex(0.751953125D, 0.0625D).normal(-1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f18, -0.5D).tex(0.751953125D, 0.0625D).normal(-1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f17, -0.5D).tex(0.751953125D, 0.0D).normal(-1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f17, -0.5D).tex(0.751953125D, 0.0D).normal(1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f18, -0.5D).tex(0.751953125D, 0.0625D).normal(1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f18, 0.5D).tex(0.751953125D, 0.0625D).normal(1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f17, 0.5D).tex(0.751953125D, 0.0D).normal(1.0F, 0.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f15, (double) f18, -0.5D).tex((double) f20, (double) f21).normal(0.0F, 0.0F, -1.0F).endVertex();
+				bufferbuilder.pos((double) f16, (double) f18, -0.5D).tex((double) f19, (double) f21).normal(0.0F, 0.0F, -1.0F).endVertex();
+				bufferbuilder.pos((double) f16, (double) f17, -0.5D).tex((double) f19, (double) f22).normal(0.0F, 0.0F, -1.0F).endVertex();
+				bufferbuilder.pos((double) f15, (double) f17, -0.5D).tex((double) f20, (double) f22).normal(0.0F, 0.0F, -1.0F).endVertex();
+				bufferbuilder.pos((double) f15, (double) f17, 0.5D).tex(0.75D, 0.0D).normal(0.0F, 0.0F, 1.0F).endVertex();
+				bufferbuilder.pos((double) f16, (double) f17, 0.5D).tex(0.8125D, 0.0D).normal(0.0F, 0.0F, 1.0F).endVertex();
+				bufferbuilder.pos((double) f16, (double) f18, 0.5D).tex(0.8125D, 0.0625D).normal(0.0F, 0.0F, 1.0F).endVertex();
+				bufferbuilder.pos((double) f15, (double) f18, 0.5D).tex(0.75D, 0.0625D).normal(0.0F, 0.0F, 1.0F).endVertex();
+				bufferbuilder.pos((double) f15, (double) f17, -0.5D).tex(0.75D, 0.001953125D).normal(0.0F, 1.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f16, (double) f17, -0.5D).tex(0.8125D, 0.001953125D).normal(0.0F, 1.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f16, (double) f17, 0.5D).tex(0.8125D, 0.001953125D).normal(0.0F, 1.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f15, (double) f17, 0.5D).tex(0.75D, 0.001953125D).normal(0.0F, 1.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f15, (double) f18, 0.5D).tex(0.75D, 0.001953125D).normal(0.0F, -1.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f16, (double) f18, 0.5D).tex(0.8125D, 0.001953125D).normal(0.0F, -1.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f16, (double) f18, -0.5D).tex(0.8125D, 0.001953125D).normal(0.0F, -1.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f15, (double) f18, -0.5D).tex(0.75D, 0.001953125D).normal(0.0F, -1.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f15, (double) f17, 0.5D).tex(0.751953125D, 0.0D).normal(-1.0F, 0.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f15, (double) f18, 0.5D).tex(0.751953125D, 0.0625D).normal(-1.0F, 0.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f15, (double) f18, -0.5D).tex(0.751953125D, 0.0625D).normal(-1.0F, 0.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f15, (double) f17, -0.5D).tex(0.751953125D, 0.0D).normal(-1.0F, 0.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f16, (double) f17, -0.5D).tex(0.751953125D, 0.0D).normal(1.0F, 0.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f16, (double) f18, -0.5D).tex(0.751953125D, 0.0625D).normal(1.0F, 0.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f16, (double) f18, 0.5D).tex(0.751953125D, 0.0625D).normal(1.0F, 0.0F, 0.0F).endVertex();
+				bufferbuilder.pos((double) f16, (double) f17, 0.5D).tex(0.751953125D, 0.0D).normal(1.0F, 0.0F, 0.0F).endVertex();
 				tessellator.draw();
 			}
 		}

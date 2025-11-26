@@ -1,6 +1,8 @@
 package com.windanesz.lostloot.entity;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.block.BlockRedstoneDiode;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -15,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Mirror;
@@ -27,9 +30,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.Validate;
 
-import java.util.Optional;
-import java.util.UUID;
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class EntityModPainting extends Entity {
 
@@ -37,7 +39,11 @@ public class EntityModPainting extends Entity {
 	protected static final DataParameter<String> PAINTING = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.STRING);
 	protected static final DataParameter<Integer> SIZE_X = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.VARINT);
 	protected static final DataParameter<Integer> SIZE_Y = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.VARINT);
-	protected static final DataParameter<Optional<UUID>> UUID = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+	protected static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.<Optional<UUID>>createKey(EntityModPainting.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+
+	// Using vanilla skulls as a user profile cache
+	private final TileEntitySkull skull = new TileEntitySkull();
+
 
 	private static final Predicate<Entity> IS_HANGING_ENTITY = new Predicate<Entity>() {
 		public boolean apply(@Nullable Entity p_apply_1_) {
@@ -70,7 +76,7 @@ public class EntityModPainting extends Entity {
 		this.dataManager.register(PAINTING, "forest");
 		this.dataManager.register(SIZE_X, 32);
 		this.dataManager.register(SIZE_Y, 32);
-		this.dataManager.register(UUID, Optional.empty());
+		this.dataManager.register(OWNER_UUID, Optional.absent());
 	}
 
 	/**
@@ -171,8 +177,7 @@ public class EntityModPainting extends Entity {
 					blockpos$mutableblockpos.setPos(blockpos).move(enumfacing, k + i1).move(EnumFacing.UP, l + j1);
 					IBlockState iblockstate = this.world.getBlockState(blockpos$mutableblockpos);
 
-					if (iblockstate.isSideSolid(this.world, blockpos$mutableblockpos, this.facingDirection))
-						continue;
+					if (iblockstate.isSideSolid(this.world, blockpos$mutableblockpos, this.facingDirection)) continue;
 
 					if (!iblockstate.getMaterial().isSolid() && !BlockRedstoneDiode.isDiode(iblockstate)) {
 						return false;
@@ -255,9 +260,8 @@ public class EntityModPainting extends Entity {
 		compound.setInteger("SizeX", this.getXSize());
 		compound.setInteger("SizeY", this.getYSize());
 		compound.setString("Painting", this.getPainting());
-		this.getUniqueIDOptional().ifPresent(uuid -> compound.setString("UUID", uuid.toString()));
-		if (this.getUniqueIDOptional().isPresent()) {
-			compound.setString("UUID", this.getUniqueIDOptional().get().toString());
+		if (this.getOwnerId().isPresent()) {
+			compound.setString("OwnerUUID", this.getOwnerId().get().toString());
 		}
 	}
 
@@ -268,21 +272,18 @@ public class EntityModPainting extends Entity {
 		this.hangingPosition = new BlockPos(compound.getInteger("TileX"), compound.getInteger("TileY"), compound.getInteger("TileZ"));
 		this.updateFacingWithBoundingBox(EnumFacing.byHorizontalIndex(compound.getByte("Facing")));
 		this.setProperties(compound.getFloat("Rotation"), compound.getInteger("SizeX"), compound.getInteger("SizeY"), compound.getString("Painting"));
-		if (compound.hasKey("UUID", 8)) {
-			try {
-				this.setUniqueID(java.util.UUID.fromString(compound.getString("UUID")));
-			} catch (IllegalArgumentException e) {
-				// Ignore invalid UUID
-			}
+		if (compound.hasKey("OwnerUUID", 8)) {
+			UUID ownerUUID = UUID.fromString(compound.getString("OwnerUUID"));
+			setOwnerId(ownerUUID);
 		}
 	}
 
 	public int getWidthPixels() {
-		return 64;
+		return dataManager.get(SIZE_X);
 	}
 
 	public int getHeightPixels() {
-		return 64;
+		return dataManager.get(SIZE_Y);
 	}
 
 	public void onBroken(@Nullable Entity brokenEntity) {
@@ -394,33 +395,36 @@ public class EntityModPainting extends Entity {
 		this.dataManager.set(PAINTING, painting);
 	}
 
-   public float getRotation() {
+	public float getRotation() {
 		return this.dataManager.get(ROTATION);
-   }
+	}
 
-   public int getXSize() {
+	public int getXSize() {
 		return this.dataManager.get(SIZE_X);
-   }
+	}
 
-   public int getYSize() {
+	public int getYSize() {
 		return this.dataManager.get(SIZE_Y);
-   }
+	}
 
-   public String getPainting() {
+	public String getPainting() {
 		return this.dataManager.get(PAINTING);
-   }
+	}
 
-	public Optional<UUID> getUniqueIDOptional() {
-		return this.dataManager.get(UUID);
+	public Optional<UUID> getOwnerId() {
+		return this.dataManager.get(OWNER_UUID);
+	}
+
+	public void setOwnerId(@Nullable UUID uuid) {
+		if (uuid != null) {
+			this.dataManager.set(OWNER_UUID, Optional.of(uuid));
+			this.skull.setPlayerProfile(new GameProfile(uuid, null));
+		}
 	}
 
 	@Nullable
-	public UUID getUniqueID() {
-		return this.getUniqueIDOptional().orElse(null);
-	}
-
-	public void setUniqueID(@Nullable UUID uuid) {
-		this.dataManager.set(UUID, Optional.ofNullable(uuid));
+	public GameProfile getPlayerProfile() {
+		return this.skull.getPlayerProfile();
 	}
 
 }
