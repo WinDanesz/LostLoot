@@ -44,7 +44,16 @@ public class RenderModPainting extends Render<EntityModPainting> {
 			GlStateManager.enableOutlineMode(this.getTeamColor(painting));
 		}
 
-		this.renderPainting(painting, 32, 32, 0, 0);
+		int hauntingProgress = painting.getHauntingProgress();
+		int textureV = 0;
+		if (hauntingProgress >= 70) {
+			textureV = 96;
+		} else if (hauntingProgress >= 40) {
+			textureV = 64;
+		} else if (hauntingProgress >= 20) {
+			textureV = 32;
+		}
+		this.renderPainting(painting, 32, 32, 0, textureV);
 
 		// Render player torso and head
 		GlStateManager.pushMatrix();

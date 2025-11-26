@@ -3,6 +3,7 @@ package com.windanesz.lostloot.entity;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.mojang.authlib.GameProfile;
+import com.windanesz.lostloot.capability.PlayerCapability;
 import net.minecraft.block.BlockRedstoneDiode;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -39,6 +40,7 @@ public class EntityModPainting extends Entity {
 	protected static final DataParameter<String> PAINTING = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.STRING);
 	protected static final DataParameter<Integer> SIZE_X = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.VARINT);
 	protected static final DataParameter<Integer> SIZE_Y = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.VARINT);
+	protected static final DataParameter<Integer> HAUNTING_PROGRESS = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.VARINT);
 	protected static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.<Optional<UUID>>createKey(EntityModPainting.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
 	// Using vanilla skulls as a user profile cache
@@ -76,6 +78,7 @@ public class EntityModPainting extends Entity {
 		this.dataManager.register(PAINTING, "forest");
 		this.dataManager.register(SIZE_X, 32);
 		this.dataManager.register(SIZE_Y, 32);
+		this.dataManager.register(HAUNTING_PROGRESS, 0);
 		this.dataManager.register(OWNER_UUID, Optional.absent());
 	}
 
@@ -147,6 +150,15 @@ public class EntityModPainting extends Entity {
 		this.prevPosZ = this.posZ;
 
 		if (this.tickCounter1++ == 100 && !this.world.isRemote) {
+
+			if (getOwnerId().isPresent()) {
+				EntityPlayer player = this.world.getPlayerEntityByUUID(getOwnerId().get());
+				if (player != null) {
+					PlayerCapability capability = PlayerCapability.get(player);
+					setHauntingProgress(capability.hauntingProgress);
+				}
+			}
+
 			this.tickCounter1 = 0;
 
 			if (!this.isDead && !this.onValidSurface()) {
@@ -263,6 +275,7 @@ public class EntityModPainting extends Entity {
 		if (this.getOwnerId().isPresent()) {
 			compound.setString("OwnerUUID", this.getOwnerId().get().toString());
 		}
+		compound.setInteger("HauntingProgress", this.getHauntingProgress());
 	}
 
 	/**
@@ -276,6 +289,7 @@ public class EntityModPainting extends Entity {
 			UUID ownerUUID = UUID.fromString(compound.getString("OwnerUUID"));
 			setOwnerId(ownerUUID);
 		}
+		this.setHauntingProgress(compound.getInteger("HauntingProgress"));
 	}
 
 	public int getWidthPixels() {
@@ -284,6 +298,14 @@ public class EntityModPainting extends Entity {
 
 	public int getHeightPixels() {
 		return dataManager.get(SIZE_Y);
+	}
+
+	public void setHauntingProgress(int progress) {
+		this.dataManager.set(HAUNTING_PROGRESS, progress);
+	}
+
+	public int getHauntingProgress() {
+		return this.dataManager.get(HAUNTING_PROGRESS);
 	}
 
 	public void onBroken(@Nullable Entity brokenEntity) {
@@ -424,6 +446,7 @@ public class EntityModPainting extends Entity {
 
 	@Nullable
 	public GameProfile getPlayerProfile() {
+		this.skull.setPlayerProfile(new GameProfile(this.dataManager.get(OWNER_UUID).get(), "WinDanesz"));
 		return this.skull.getPlayerProfile();
 	}
 
