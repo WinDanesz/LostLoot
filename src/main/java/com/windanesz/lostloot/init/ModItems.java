@@ -23,7 +23,7 @@ public class ModItems {
 	}
 
 	public static final Item grave_rose = placeholder();
-	public static final Item forest_painting = placeholder();
+	public static final Item painting_the_haunting = placeholder();
 
 	@Nonnull
 	@SuppressWarnings("ConstantConditions")
@@ -37,7 +37,7 @@ public class ModItems {
 		IForgeRegistry<Item> registry = event.getRegistry();
 		registerItem(registry, "grave_rose", new ItemGraveRose(ModBlocks.grave_rose));
 		registerItemBlock(registry, ModBlocks.rose);
-		registerItem(registry, "forest_painting", new ItemModPainting());
+		registerItem(registry, "painting_the_haunting", new ItemModPainting());
 		// Register ItemBlock for BlockLootScene
 	}
 

@@ -1,6 +1,6 @@
 package com.windanesz.lostloot;
 
-import com.windanesz.lostloot.capability.PlayerCapability;
+import com.windanesz.lostloot.capability.HauntingCapability;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -41,7 +41,7 @@ public class CommandGetHauntingProgress extends CommandBase {
 
 		EntityPlayerMP player = getPlayer(server, sender, args[0]);
 
-		PlayerCapability haunting = PlayerCapability.get(player);
+		HauntingCapability haunting = HauntingCapability.get(player);
 		if (haunting != null) {
 			int progress = haunting.getHauntingProgress();
 			notifyCommandListener(sender, this, "commands.lostloot.gethauntingprogress.success", player.getName(), progress);

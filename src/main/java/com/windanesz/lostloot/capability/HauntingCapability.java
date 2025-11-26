@@ -1,6 +1,8 @@
 package com.windanesz.lostloot.capability;
 
 import com.windanesz.lostloot.LostLoot;
+import com.windanesz.lostloot.Utils;
+import com.windanesz.lostloot.entity.EntitySpecter;
 import com.windanesz.lostloot.network.PacketHandler;
 import com.windanesz.lostloot.packet.PacketPlayerSync;
 import net.minecraft.entity.Entity;
@@ -10,6 +12,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -18,18 +21,18 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 @Mod.EventBusSubscriber
-public class PlayerCapability implements INBTSerializable<NBTTagCompound> {
+public class HauntingCapability implements INBTSerializable<NBTTagCompound> {
 
 	// This annotation does some crazy Forge magic behind the scenes and assigns this field a value.
-	@CapabilityInject(PlayerCapability.class)
-	private static final Capability<PlayerCapability> PLAYER_CAPABILITY = null;
+	@CapabilityInject(HauntingCapability.class)
+	private static final Capability<HauntingCapability> PLAYER_CAPABILITY = null;
 
 	private final EntityPlayer player;
 
@@ -43,11 +46,11 @@ public class PlayerCapability implements INBTSerializable<NBTTagCompound> {
 
 	public int hauntingProgress = 0;
 
-	public PlayerCapability() {
+	public HauntingCapability() {
 		this(null); // Nullary constructor for the registration method factory parameter
 	}
 
-	public PlayerCapability(EntityPlayer player) {
+	public HauntingCapability(EntityPlayer player) {
 		this.player = player;
 	}
 
@@ -56,32 +59,25 @@ public class PlayerCapability implements INBTSerializable<NBTTagCompound> {
 	 */
 	public static void register() {
 
-		CapabilityManager.INSTANCE.register(PlayerCapability.class, new IStorage<PlayerCapability>() {
+		CapabilityManager.INSTANCE.register(HauntingCapability.class, new IStorage<HauntingCapability>() {
 			// Unused but necessary...
 			@Override
-			public NBTBase writeNBT(Capability<PlayerCapability> capability, PlayerCapability instance, EnumFacing side) {
+			public NBTBase writeNBT(Capability<HauntingCapability> capability, HauntingCapability instance, EnumFacing side) {
 				return null;
 			}
 
 			@Override
-			public void readNBT(Capability<PlayerCapability> capability, PlayerCapability instance, EnumFacing side, NBTBase nbt) {
+			public void readNBT(Capability<HauntingCapability> capability, HauntingCapability instance, EnumFacing side, NBTBase nbt) {
 			}
 
-		}, PlayerCapability::new);
+		}, HauntingCapability::new);
 	}
 
 	/**
 	 * Returns the WizardData instance for the specified player.
 	 */
-	public static PlayerCapability get(EntityPlayer player) {
+	public static HauntingCapability get(EntityPlayer player) {
 		return player.getCapability(PLAYER_CAPABILITY, null);
-	}
-
-	/**
-	 * Called each time the associated player is updated.
-	 */
-	@SuppressWarnings("unchecked")
-	private void update() {
 	}
 
 	/**
@@ -92,7 +88,7 @@ public class PlayerCapability implements INBTSerializable<NBTTagCompound> {
 	 * @param data    The old WizardData whose data is to be copied over.
 	 * @param respawn True if the player died and is respawning, false if they are just travelling between dimensions.
 	 */
-	public void copyFrom(PlayerCapability data, boolean respawn) {
+	public void copyFrom(HauntingCapability data, boolean respawn) {
 		this.hauntingProgress = data.hauntingProgress;
 	}
 
@@ -131,14 +127,14 @@ public class PlayerCapability implements INBTSerializable<NBTTagCompound> {
 
 		if (event.getObject() instanceof EntityPlayer)
 			event.addCapability(new ResourceLocation(LostLoot.MODID, LostLoot.MODNAME + "Data"),
-					new PlayerCapability.Provider((EntityPlayer) event.getObject()));
+					new HauntingCapability.Provider((EntityPlayer) event.getObject()));
 	}
 
 	@SubscribeEvent
 	public static void onPlayerCloneEvent(PlayerEvent.Clone event) {
 
-		PlayerCapability newData = PlayerCapability.get(event.getEntityPlayer());
-		PlayerCapability oldData = PlayerCapability.get(event.getOriginal());
+		HauntingCapability newData = HauntingCapability.get(event.getEntityPlayer());
+		HauntingCapability oldData = HauntingCapability.get(event.getOriginal());
 
 		newData.copyFrom(oldData, event.isWasDeath());
 
@@ -148,30 +144,40 @@ public class PlayerCapability implements INBTSerializable<NBTTagCompound> {
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		if (!event.getEntity().world.isRemote && event.getEntity() instanceof EntityPlayerMP) {
-			PlayerCapability data = PlayerCapability.get((EntityPlayer) event.getEntity());
+			HauntingCapability data = HauntingCapability.get((EntityPlayer) event.getEntity());
 			if (data != null) data.sync();
 		}
 	}
 
 	@SubscribeEvent
-	public static void onLivingUpdateEvent(LivingUpdateEvent event) {
+	public static void onLivingUpdateEvent(TickEvent.PlayerTickEvent event) {
 
-		if (event.getEntityLiving() instanceof EntityPlayer) {
-
-			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-
-			if (PlayerCapability.get(player) != null) {
-				PlayerCapability.get(player).update();
+		if (event.player.ticksExisted % 20 == 0 && !event.player.world.isRemote) {
+			EntityPlayer player = event.player;
+			HauntingCapability cap = HauntingCapability.get(player);
+			if (HauntingCapability.get(player) != null) {
+				int hauntingProg = cap.hauntingProgress;
+				if (hauntingProg > 50) {
+					if (player.world.rand.nextInt(20) == 0) {
+						BlockPos pos = Utils.findNearbyAirSpace(player.world, player.getPosition(), 6);
+						if (pos != null) {
+							EntitySpecter specter = new EntitySpecter(player.world);
+							specter.setPosition(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+							player.world.spawnEntity(specter);
+							specter.setAttackTarget(player);
+						}
+					}
+				}
 			}
 		}
 	}
 
 	public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
-		private final PlayerCapability data;
+		private final HauntingCapability data;
 
 		public Provider(EntityPlayer player) {
-			data = new PlayerCapability(player);
+			data = new HauntingCapability(player);
 		}
 
 		@Override

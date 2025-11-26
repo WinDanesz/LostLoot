@@ -3,7 +3,7 @@ package com.windanesz.lostloot.entity;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.mojang.authlib.GameProfile;
-import com.windanesz.lostloot.capability.PlayerCapability;
+import com.windanesz.lostloot.capability.HauntingCapability;
 import net.minecraft.block.BlockRedstoneDiode;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -154,7 +154,7 @@ public class EntityModPainting extends Entity {
 			if (getOwnerId().isPresent()) {
 				EntityPlayer player = this.world.getPlayerEntityByUUID(getOwnerId().get());
 				if (player != null) {
-					PlayerCapability capability = PlayerCapability.get(player);
+					HauntingCapability capability = HauntingCapability.get(player);
 					setHauntingProgress(capability.hauntingProgress);
 				}
 			}

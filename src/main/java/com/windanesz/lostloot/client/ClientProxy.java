@@ -3,7 +3,7 @@ package com.windanesz.lostloot.client;
 import com.windanesz.lostloot.CommonProxy;
 import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.block.tile.TileEntityGraveMarker;
-import com.windanesz.lostloot.capability.PlayerCapability;
+import com.windanesz.lostloot.capability.HauntingCapability;
 import com.windanesz.lostloot.client.renderer.RenderFamiliarSpecter;
 import com.windanesz.lostloot.client.renderer.RenderModPainting;
 import com.windanesz.lostloot.client.renderer.RenderSpecter;
@@ -82,7 +82,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void handlePlayerSyncPacket(PacketPlayerSync.Message message) {
-		PlayerCapability data = PlayerCapability.get(Minecraft.getMinecraft().player);
+		HauntingCapability data = HauntingCapability.get(Minecraft.getMinecraft().player);
 
 		if (data != null) {
 			data.hauntingProgress = message.hauntedProgress;
