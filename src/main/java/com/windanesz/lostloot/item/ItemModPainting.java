@@ -11,10 +11,47 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ItemModPainting extends Item {
 
-	public ItemModPainting() {
+	public enum EnumPainting {
+		PAINTING_THE_HAUNTING("painting_the_haunting", 32, 32, 0, 0, true),
+		PAINTING_PORTRAIT("painting_portrait", 32, 48, 32, 32, true);
+
+		public final String name;
+		public final int sizeX;
+		public final int sizeY;
+		public final int u;
+		public final int v;
+		public final boolean renderPlayer;
+
+		private static final Map<String, EnumPainting> BY_NAME = Stream.of(values())
+				.collect(Collectors.toMap(e -> e.name, Function.identity()));
+
+
+		EnumPainting(String name, int sizeX, int sizeY, int u, int v, boolean renderPlayer) {
+			this.name = name;
+			this.sizeX = sizeX;
+			this.sizeY = sizeY;
+			this.u = u;
+			this.v = v;
+			this.renderPlayer = renderPlayer;
+		}
+
+		@Nullable
+		public static EnumPainting getByName(String name) {
+			return BY_NAME.get(name);
+		}
+	}
+
+	private final EnumPainting painting;
+
+	public ItemModPainting(EnumPainting painting) {
+		this.painting = painting;
 	}
 
 	/**
@@ -30,7 +67,7 @@ public class ItemModPainting extends Item {
 			if (painting != null && painting.onValidSurface()) {
 				if (!worldIn.isRemote) {
 					painting.playPlaceSound();
-					painting.setProperties(facing.getHorizontalAngle(), 32, 32, "forest");
+					painting.setProperties(facing.getHorizontalAngle(), this.painting.sizeX, this.painting.sizeY, this.painting.name);
 					painting.setOwnerId(player.getUniqueID());
 					worldIn.spawnEntity(painting);
 					itemstack.shrink(1);

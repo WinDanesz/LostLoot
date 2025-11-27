@@ -177,6 +177,9 @@ public class EntitySpecter extends EntityCreature {
             @Override
             public void resetTask() {
                 this.parentEntity.setAttacking(false);
+                if (this.parentEntity.getMoveHelper() instanceof SpecterMoveHelper) {
+                    ((SpecterMoveHelper) this.parentEntity.getMoveHelper()).startCooldown(0);
+                }
             }
 
             @Override

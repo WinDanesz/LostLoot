@@ -37,7 +37,8 @@ public class ModItems {
 		IForgeRegistry<Item> registry = event.getRegistry();
 		registerItem(registry, "grave_rose", new ItemGraveRose(ModBlocks.grave_rose));
 		registerItemBlock(registry, ModBlocks.rose);
-		registerItem(registry, "painting_the_haunting", new ItemModPainting());
+		registerItem(registry, "painting_the_haunting", new ItemModPainting(ItemModPainting.EnumPainting.PAINTING_THE_HAUNTING));
+		registerItem(registry, "painting_portrait", new ItemModPainting(ItemModPainting.EnumPainting.PAINTING_PORTRAIT));
 		// Register ItemBlock for BlockLootScene
 	}
 
