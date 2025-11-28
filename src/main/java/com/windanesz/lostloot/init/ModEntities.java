@@ -53,7 +53,7 @@ public class ModEntities {
 		// projectile entities
 		registry.register(createEntry(EntitySpecter.class, "specter", TrackingType.LIVING).egg(0xebf2ff,0x6aeba6).build());
 		registry.register(createEntry(EntityFamiliarSpecter.class, "specter_familiar", TrackingType.LIVING).egg(0xebf2ff,0x6aeba6).build());
-		registry.register(createEntry(EntityModPainting.class, "forest_painting", TrackingType.CONSTRUCT).build());
+		registry.register(createEntry(EntityModPainting.class, "forest_painting", TrackingType.LIVING).build());
 	}
 
 	/**

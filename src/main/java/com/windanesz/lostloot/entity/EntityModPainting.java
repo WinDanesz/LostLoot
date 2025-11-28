@@ -63,7 +63,7 @@ public class EntityModPainting extends Entity {
 	public EntityModPainting(World worldIn) {
 		super(worldIn);
 		this.setSize(0.5F, 0.5F);
-		this.facingDirection = EnumFacing.WEST;
+		this.facingDirection = EnumFacing.EAST;
 	}
 
 	public EntityModPainting(World worldIn, BlockPos hangingPositionIn, EnumFacing facing) {
@@ -149,7 +149,7 @@ public class EntityModPainting extends Entity {
 		this.prevPosY = this.posY;
 		this.prevPosZ = this.posZ;
 
-		if (this.tickCounter1++ == 100 && !this.world.isRemote) {
+		if (this.ticksExisted % 20 == 0 && !this.world.isRemote) {
 
 			if (getOwnerId().isPresent()) {
 				EntityPlayer player = this.world.getPlayerEntityByUUID(getOwnerId().get());
@@ -159,12 +159,10 @@ public class EntityModPainting extends Entity {
 				}
 			}
 
-			this.tickCounter1 = 0;
-
-			if (!this.isDead && !this.onValidSurface()) {
-				this.setDead();
-				this.onBroken((Entity) null);
-			}
+			//if (!this.isDead && !this.onValidSurface()) {
+			//	this.setDead();
+			//	this.onBroken((Entity) null);
+			//}
 		}
 	}
 
@@ -172,7 +170,6 @@ public class EntityModPainting extends Entity {
 	 * checks to make sure painting can be placed there
 	 */
 	public boolean onValidSurface() {
-		//if (true) return true;
 		if (!this.world.getCollisionBoxes(this, this.getEntityBoundingBox()).isEmpty()) {
 			return false;
 		} else {
@@ -263,7 +260,7 @@ public class EntityModPainting extends Entity {
 	 * (abstract) Protected helper method to write subclass entity data to NBT.
 	 */
 	public void writeEntityToNBT(NBTTagCompound compound) {
-		compound.setByte("Facing", (byte) this.facingDirection.getHorizontalIndex());
+		compound.setByte("Facing", (byte) EnumFacing.fromAngle(getRotation()).getHorizontalIndex());
 		BlockPos blockpos = this.getHangingPosition();
 		compound.setInteger("TileX", blockpos.getX());
 		compound.setInteger("TileY", blockpos.getY());
@@ -282,6 +279,7 @@ public class EntityModPainting extends Entity {
 	 * (abstract) Protected helper method to read subclass entity data from NBT.
 	 */
 	public void readEntityFromNBT(NBTTagCompound compound) {
+		this.facingDirection = EnumFacing.byHorizontalIndex(compound.getByte("Facing"));
 		this.hangingPosition = new BlockPos(compound.getInteger("TileX"), compound.getInteger("TileY"), compound.getInteger("TileZ"));
 		this.updateFacingWithBoundingBox(EnumFacing.byHorizontalIndex(compound.getByte("Facing")));
 		this.setProperties(compound.getFloat("Rotation"), compound.getInteger("SizeX"), compound.getInteger("SizeY"), compound.getString("Painting"));
@@ -352,9 +350,13 @@ public class EntityModPainting extends Entity {
 	 * Sets the x,y,z of the entity from the given parameters. Also seems to set up a bounding box.
 	 */
 	public void setPosition(double x, double y, double z) {
-		this.hangingPosition = new BlockPos(x, y, z);
-		this.updateBoundingBox();
-		this.isAirBorne = true;
+		if (this.dataManager != null) {
+			this.facingDirection = EnumFacing.fromAngle(this.getRotation());
+
+			this.hangingPosition = new BlockPos(x, y, z);
+			this.updateBoundingBox();
+			this.isAirBorne = true;
+		}
 	}
 
 	public BlockPos getHangingPosition() {
