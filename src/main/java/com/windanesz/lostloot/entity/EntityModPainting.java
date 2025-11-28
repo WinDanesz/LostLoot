@@ -3,12 +3,14 @@ package com.windanesz.lostloot.entity;
 import com.google.common.base.Optional;
 import com.mojang.authlib.GameProfile;
 import com.windanesz.lostloot.capability.HauntingCapability;
+import com.windanesz.lostloot.init.ModItems;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -140,8 +142,12 @@ public class EntityModPainting extends EntityHanging implements IEntityAdditiona
 					return;
 				}
 			}
-
-			this.entityDropItem(new ItemStack(Items.PAINTING), 0.0F);
+			Item item = this.getPainting().equals("painting_the_haunting") ? ModItems.painting_the_haunting : ModItems.painting_portrait;
+			ItemStack stack = new ItemStack(item);
+			if (getOwnerId().isPresent()) {
+				stack.getOrCreateSubCompound("Owner").setString("UUID", getOwnerId().get().toString());
+			}
+			this.entityDropItem(stack, 0.0F);
 		}
 	}
 

@@ -24,6 +24,7 @@ public class ModItems {
 
 	public static final Item grave_rose = placeholder();
 	public static final Item painting_the_haunting = placeholder();
+	public static final Item painting_portrait = placeholder();
 
 	@Nonnull
 	@SuppressWarnings("ConstantConditions")

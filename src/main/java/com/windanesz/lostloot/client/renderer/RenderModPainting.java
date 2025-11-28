@@ -67,10 +67,18 @@ public class RenderModPainting extends Render<EntityModPainting> {
 				textureV = 32;
 			}
 		}
+
 		this.renderPainting(painting, p.sizeX, p.sizeY, p.u, textureV);
 		if (p.renderPlayer) {
 			// Render player
 			GlStateManager.pushMatrix();
+
+			if (p == ItemModPainting.EnumPainting.PAINTING_THE_HAUNTING) {
+				int hauntingProgress = painting.getHauntingProgress();
+				float brightness = Math.max(0.0f, 1.0f - (hauntingProgress / 160.0f));
+				GlStateManager.color(brightness, brightness, brightness);
+			}
+
 			GlStateManager.translate(0, 0, -0.01); //Slightly offset to prevent z-fighting
 			GlStateManager.translate(0, -10, 0); // Move down by 16 pixels
 			ResourceLocation skin = DefaultPlayerSkin.getDefaultSkinLegacy();
@@ -104,7 +112,6 @@ public class RenderModPainting extends Render<EntityModPainting> {
 		GlStateManager.popMatrix();
 		super.doRender(painting, x, y, z, entityYaw, partialTicks);
 	}
-
 
 	@Nullable
 	@Override
@@ -265,7 +272,7 @@ public class RenderModPainting extends Render<EntityModPainting> {
 			float headX0 = -headSize / 2;
 			float headX1 = headSize / 2;
 
-			float legY0 = - (legHeight + bodyHeight) / 2;
+			float legY0 = -(legHeight + bodyHeight) / 2;
 			float legY1 = legY0 + legHeight;
 
 			float bodyY0 = legY1;

@@ -9,6 +9,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -68,7 +69,12 @@ public class ItemModPainting extends Item {
 				if (!worldIn.isRemote) {
 					painting.playPlaceSound();
 					painting.setProperties(facing.getHorizontalAngle(), this.painting.sizeX, this.painting.sizeY, this.painting.name);
-					painting.setOwnerId(player.getUniqueID());
+					NBTTagCompound ownerTag = itemstack.getSubCompound("Owner");
+					if (ownerTag != null && ownerTag.hasKey("UUID", 8)) {
+						painting.setOwnerId(java.util.UUID.fromString(ownerTag.getString("UUID")));
+					} else {
+						painting.setOwnerId(player.getUniqueID());
+					}
 					worldIn.spawnEntity(painting);
 					itemstack.shrink(1);
 				}

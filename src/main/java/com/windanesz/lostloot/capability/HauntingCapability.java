@@ -12,7 +12,9 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -26,6 +28,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import java.util.List;
 
 @Mod.EventBusSubscriber
 public class HauntingCapability implements INBTSerializable<NBTTagCompound> {
@@ -126,8 +129,7 @@ public class HauntingCapability implements INBTSerializable<NBTTagCompound> {
 	public static void onCapabilityLoad(AttachCapabilitiesEvent<Entity> event) {
 
 		if (event.getObject() instanceof EntityPlayer)
-			event.addCapability(new ResourceLocation(LostLoot.MODID, LostLoot.MODNAME + "Data"),
-					new HauntingCapability.Provider((EntityPlayer) event.getObject()));
+			event.addCapability(new ResourceLocation(LostLoot.MODID, LostLoot.MODNAME + "Data"), new HauntingCapability.Provider((EntityPlayer) event.getObject()));
 	}
 
 	@SubscribeEvent
@@ -152,19 +154,23 @@ public class HauntingCapability implements INBTSerializable<NBTTagCompound> {
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(TickEvent.PlayerTickEvent event) {
 
-		if (event.player.ticksExisted % 20 == 0 && !event.player.world.isRemote) {
+		if (event.player.ticksExisted % 20 == 0 && !event.player.world.isRemote && event.player.world.getDifficulty() != EnumDifficulty.PEACEFUL) {
 			EntityPlayer player = event.player;
 			HauntingCapability cap = HauntingCapability.get(player);
 			if (HauntingCapability.get(player) != null && !player.capabilities.isCreativeMode) {
 				int hauntingProg = cap.hauntingProgress;
 				if (hauntingProg > 50) {
 					if (player.world.rand.nextInt(20) == 0) {
-						BlockPos pos = Utils.findNearbyAirSpace(player.world, player.getPosition(), 6);
-						if (pos != null) {
-							EntitySpecter specter = new EntitySpecter(player.world);
-							specter.setPosition(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
-							player.world.spawnEntity(specter);
-							specter.setAttackTarget(player);
+						List<EntitySpecter> specters = player.world.getEntitiesWithinAABB(EntitySpecter.class, new AxisAlignedBB(player.getPosition()).grow(30));
+
+						if (specters.isEmpty()) {
+							BlockPos pos = Utils.findNearbyAirSpace(player.world, player.getPosition(), 6);
+							if (pos != null) {
+								EntitySpecter specter = new EntitySpecter(player.world);
+								specter.setPosition(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+								player.world.spawnEntity(specter);
+								specter.setAttackTarget(player);
+							}
 						}
 					}
 				}
