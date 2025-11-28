@@ -47,7 +47,6 @@ public class ModItems {
 		ItemBlock itemBlock = new ItemBlock(block);
 		itemBlock.setRegistryName(block.getRegistryName());
 		registry.register(itemBlock);
-		itemBlock.setCreativeTab(CreativeTabs.DECORATIONS);
 	}
 
 	public static void registerItem(IForgeRegistry<Item> registry, String name, Item item) {

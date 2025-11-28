@@ -62,7 +62,7 @@ public class ItemModPainting extends Item {
 		BlockPos blockpos = pos.offset(facing);
 
 		if (facing != EnumFacing.DOWN && facing != EnumFacing.UP && player.canPlayerEdit(blockpos, facing, itemstack)) {
-			EntityModPainting painting = this.createEntity(worldIn, blockpos, facing);
+			EntityModPainting painting = new EntityModPainting(worldIn, blockpos, facing);
 
 			if (painting != null && painting.onValidSurface()) {
 				if (!worldIn.isRemote) {
@@ -81,9 +81,4 @@ public class ItemModPainting extends Item {
 		}
 	}
 
-
-	@Nullable
-	private EntityModPainting createEntity(World worldIn, BlockPos pos, EnumFacing clickedSide) {
-		return new EntityModPainting(worldIn, pos, clickedSide);
-	}
 }

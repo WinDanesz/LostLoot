@@ -155,7 +155,7 @@ public class HauntingCapability implements INBTSerializable<NBTTagCompound> {
 		if (event.player.ticksExisted % 20 == 0 && !event.player.world.isRemote) {
 			EntityPlayer player = event.player;
 			HauntingCapability cap = HauntingCapability.get(player);
-			if (HauntingCapability.get(player) != null) {
+			if (HauntingCapability.get(player) != null && !player.capabilities.isCreativeMode) {
 				int hauntingProg = cap.hauntingProgress;
 				if (hauntingProg > 50) {
 					if (player.world.rand.nextInt(20) == 0) {
