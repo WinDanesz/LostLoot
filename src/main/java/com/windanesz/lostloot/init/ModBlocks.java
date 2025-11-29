@@ -1,12 +1,9 @@
 package com.windanesz.lostloot.init;
 
 import com.windanesz.lostloot.LostLoot;
-import com.windanesz.lostloot.block.BlockGraveMarker;
-import com.windanesz.lostloot.block.BlockLostLoot;
-import com.windanesz.lostloot.block.BlockLostLootMultiBlock;
-import com.windanesz.lostloot.block.BlockRose;
-import com.windanesz.lostloot.block.tile.TileEntityGraveMarker;
-import com.windanesz.lostloot.block.tile.TileEntityLostLoot;
+import com.windanesz.lostloot.block.*;
+import com.windanesz.lostloot.block.TileEntityGraveMarker;
+import com.windanesz.lostloot.block.TileEntityLostLoot;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.material.Material;
@@ -40,6 +37,7 @@ public class ModBlocks {
 	public static final Block stone_circle = placeholder();
 	public static final Block rose = placeholder();
 	public static final Block grave_rose = placeholder();
+	public static final Block grave_marker = placeholder();
 	public static final Block forest_painting = placeholder();
 
 	@Nonnull
@@ -53,11 +51,11 @@ public class ModBlocks {
 		IForgeRegistry<Block> registry = event.getRegistry();
 		registerBlock(registry, "lost_cargo", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		registerBlock(registry, "lost_crate_potions", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
-		registerBlock(registry, "skeleton_crate", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
+		registerBlock(registry, "skeleton_crate", new BlockRemains(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		registerBlock(registry, "bush_crate", new BlockLostLootMultiBlock(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		//registerBlock(registry, "loot_scene_dummy", new BlockLootSceneDummy(Material.IRON));
 		registerBlock(registry, "stone_circle", new BlockLostLoot(Material.ROCK).setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 0.1, 1)));
-		registerBlock(registry, "grave_marker", new BlockGraveMarker(Material.ROCK).setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 0.4, 1)));
+		registerBlock(registry, "grave_marker", new BlockGraveMarker(Material.ROCK).setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 0.4, 1)).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		registerBlock(registry, "rose", new BlockRose());
 		registerBlock(registry, "grave_rose", new BlockRose());
 	}
@@ -95,5 +93,6 @@ public class ModBlocks {
 		// Nope, these still don't have their own registry...
 		GameRegistry.registerTileEntity(TileEntityLostLoot.class, new ResourceLocation(LostLoot.MODID, "lost_loot"));
 		GameRegistry.registerTileEntity(TileEntityGraveMarker.class, new ResourceLocation(LostLoot.MODID, "grave_marker"));
+		GameRegistry.registerTileEntity(TileEntityRemains.class, new ResourceLocation(LostLoot.MODID, "remains"));
 	}
 }

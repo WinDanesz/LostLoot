@@ -1,4 +1,4 @@
-package com.windanesz.lostloot.block.tile;
+package com.windanesz.lostloot.block;
 
 import net.minecraft.tileentity.TileEntity;
 

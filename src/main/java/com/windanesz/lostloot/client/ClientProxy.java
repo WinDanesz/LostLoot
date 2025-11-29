@@ -2,7 +2,7 @@ package com.windanesz.lostloot.client;
 
 import com.windanesz.lostloot.CommonProxy;
 import com.windanesz.lostloot.LostLoot;
-import com.windanesz.lostloot.block.tile.TileEntityGraveMarker;
+import com.windanesz.lostloot.block.TileEntityGraveMarker;
 import com.windanesz.lostloot.capability.HauntingCapability;
 import com.windanesz.lostloot.client.renderer.RenderFamiliarSpecter;
 import com.windanesz.lostloot.client.renderer.RenderModPainting;

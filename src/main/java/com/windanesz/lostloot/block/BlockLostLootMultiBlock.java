@@ -1,6 +1,5 @@
 package com.windanesz.lostloot.block;
 
-import com.windanesz.lostloot.block.tile.TileEntityLostLoot;
 import com.windanesz.lostloot.init.ModBlocks;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;

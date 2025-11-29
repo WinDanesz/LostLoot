@@ -1,13 +1,12 @@
 package com.windanesz.lostloot.client.renderer;
 
-import com.windanesz.lostloot.block.tile.TileEntityGraveMarker;
+import com.windanesz.lostloot.block.TileEntityGraveMarker;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;

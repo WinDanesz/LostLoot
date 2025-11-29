@@ -1,4 +1,4 @@
-package com.windanesz.lostloot.block.tile;
+package com.windanesz.lostloot.block;
 
 import com.windanesz.lostloot.Settings;
 import com.windanesz.lostloot.init.ModBlocks;
@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
 public class TileEntityGraveMarker extends TileEntity implements ITickable {
 	private Item flowerPotItem;
 	private int flowerPotData;
+	private boolean flowerPlaced;
 
 	// 0 = can turn, 1 = turned, -1 = can't turn/removed
 	private int turnsIntoGraveRose = 0;
@@ -94,6 +95,7 @@ public class TileEntityGraveMarker extends TileEntity implements ITickable {
 		ResourceLocation resourcelocation = Item.REGISTRY.getNameForObject(this.flowerPotItem);
 		compound.setString("Item", resourcelocation == null ? "" : resourcelocation.toString());
 		compound.setInteger("Data", this.flowerPotData);
+		compound.setBoolean("flowerPlaced", this.flowerPlaced);
 		compound.setInteger("turnsIntoGraveRose", this.turnsIntoGraveRose);
 		compound.setInteger("transformProgress", this.transformProgress);
 		return compound;
@@ -110,6 +112,11 @@ public class TileEntityGraveMarker extends TileEntity implements ITickable {
 		}
 
 		this.flowerPotData = compound.getInteger("Data");
+
+		if (compound.hasKey("flowerPlaced")) {
+			this.flowerPlaced = compound.getBoolean("flowerPlaced");
+		}
+
 		if (compound.hasKey("turnsIntoGraveRose")) {
 			this.turnsIntoGraveRose = compound.getInteger("turnsIntoGraveRose");
 		}
@@ -162,5 +169,13 @@ public class TileEntityGraveMarker extends TileEntity implements ITickable {
 
 	public int getFlowerPotData() {
 		return this.flowerPotData;
+	}
+
+	public boolean getFlowerPlaced() {
+		return flowerPlaced;
+	}
+
+	public void setFlowerPlaced(boolean flowerPlaced) {
+		this.flowerPlaced = flowerPlaced;
 	}
 }
