@@ -5,6 +5,7 @@ import com.windanesz.lostloot.Utils;
 import com.windanesz.lostloot.entity.EntitySpecter;
 import com.windanesz.lostloot.network.PacketHandler;
 import com.windanesz.lostloot.packet.PacketPlayerSync;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -44,7 +45,32 @@ public class HauntingCapability implements INBTSerializable<NBTTagCompound> {
 	}
 
 	public void setHauntingProgress(int hauntingProgress) {
-		this.hauntingProgress = hauntingProgress;
+		int oldProgress = this.hauntingProgress;
+		this.hauntingProgress = Math.max(0, Math.min(100, hauntingProgress));
+
+		if (this.hauntingProgress > 0) {
+			if (player instanceof EntityPlayerMP) {
+				EntityPlayerMP playerMP = (EntityPlayerMP) player;
+				Advancement advancement = playerMP.getServer().getAdvancementManager().getAdvancement(new ResourceLocation(LostLoot.MODID, "haunted"));
+				if (advancement != null) {
+					if (!playerMP.getAdvancements().getProgress(advancement).isDone()) {
+						playerMP.getAdvancements().grantCriterion(advancement, "haunted");
+					}
+				}
+			}
+		}
+
+		if(oldProgress != this.hauntingProgress) {
+			sync();
+		}
+	}
+
+	public void addHauntingProgress(int amount) {
+		setHauntingProgress(this.hauntingProgress + amount);
+	}
+
+	public void reduceHauntingProgress(int amount) {
+		addHauntingProgress(-amount);
 	}
 
 	public int hauntingProgress = 0;

@@ -1,0 +1,30 @@
+{
+  "display": {
+    "icon": {
+      "item": "lostloot:grave_rose"
+    },
+    "title": {
+      "translate": "advancements.lostloot.acquire_grave_rose.title"
+    },
+    "description": {
+      "translate": "advancements.lostloot.acquire_grave_rose.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "lostloot:flower_on_grave",
+  "criteria": {
+    "has_grave_rose": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "lostloot:grave_rose"
+          }
+        ]
+      }
+    }
+  }
+}

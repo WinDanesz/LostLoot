@@ -2,9 +2,9 @@ package com.windanesz.lostloot.block;
 
 import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.Settings;
-import com.windanesz.lostloot.block.TileEntityRemains;
 import com.windanesz.lostloot.init.ModBlocks;
 import com.windanesz.lostloot.init.ModPotions;
+import com.windanesz.lostloot.capability.HauntingCapability;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -16,11 +16,7 @@ import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -29,6 +25,29 @@ import javax.annotation.Nullable;
 public class BlockRemains extends BlockLostLoot {
 	public BlockRemains(Material materialIn) {
 		super(materialIn);
+	}
+
+	@Override
+	public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
+		super.onBlockHarvested(worldIn, pos, state, player);
+		if (player instanceof EntityPlayerMP) {
+			EntityPlayerMP playerMP = (EntityPlayerMP) player;
+			// Grant advancement
+			Advancement advancement = playerMP.getServer().getAdvancementManager().getAdvancement(new ResourceLocation(LostLoot.MODID, "loot_skeleton_crate"));
+			if (advancement != null) {
+				if (!playerMP.getAdvancements().getProgress(advancement).isDone()) {
+					playerMP.getAdvancements().grantCriterion(advancement, "loot_skeleton_crate");
+				}
+			}
+			// Add haunting for breaking remains
+			if (!worldIn.isRemote) {
+				HauntingCapability haunting = HauntingCapability.get(playerMP);
+				if (haunting != null) {
+					double toAdd = Settings.worldgenSettings.haunting_gained_by_breaking_remains;
+					haunting.addHauntingProgress((int) toAdd);
+				}
+			}
+		}
 	}
 
 	@Nullable
@@ -54,9 +73,7 @@ public class BlockRemains extends BlockLostLoot {
 							double d0 = worldIn.rand.nextGaussian() * 0.1D;
 							double d1 = 0.1D + worldIn.rand.nextFloat() * 0.1D;
 							double d2 = worldIn.rand.nextGaussian() * 0.1D;
-							worldIn.spawnParticle(EnumParticleTypes.BLOCK_DUST,
-									pos.getX() + worldIn.rand.nextFloat(), pos.getY() + 0.5D, pos.getZ() + worldIn.rand.nextFloat(),
-									d0, d1, d2, Block.getStateId(blockUnder));
+							worldIn.spawnParticle(EnumParticleTypes.BLOCK_DUST, pos.getX() + worldIn.rand.nextFloat(), pos.getY() + 0.5D, pos.getZ() + worldIn.rand.nextFloat(), d0, d1, d2, Block.getStateId(blockUnder));
 						}
 					}
 				}
@@ -78,11 +95,12 @@ public class BlockRemains extends BlockLostLoot {
 
 						if (playerIn instanceof EntityPlayerMP) {
 							EntityPlayerMP player = (EntityPlayerMP) playerIn;
-							Advancement advancement = player.getServer().getAdvancementManager().getAdvancement(new ResourceLocation(LostLoot.MODID, "bury_remains"));
-
-							if (advancement != null) {
-								player.getAdvancements().grantCriterion(advancement, "bury_remains");
+							HauntingCapability haunting = HauntingCapability.get(player);
+							if (haunting != null) {
+								int toReduce = Settings.worldgenSettings.haunting_reduced_by_burying_remains;
+								haunting.reduceHauntingProgress(toReduce);
 							}
+							// Advancement granting for bury_remains has been removed.
 						}
 					}
 				}

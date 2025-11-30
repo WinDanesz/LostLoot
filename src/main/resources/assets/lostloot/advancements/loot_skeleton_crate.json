@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:bone"
+    },
+    "title": {
+      "translate": "advancements.lostloot.loot_skeleton_crate.title"
+    },
+    "description": {
+      "translate": "advancements.lostloot.loot_skeleton_crate.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "lostloot:root",
+  "criteria": {
+    "loot_skeleton_crate": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

@@ -53,7 +53,7 @@ public class Settings {
 		@Config.Name("Grave Rose Chance")
 		@Config.Comment("The chance of a rose turning into a grave rose when it is placed in a grave marker.")
 		@Config.RequiresMcRestart
-		public double grave_rose_chance = 0.95D;
+		public double grave_rose_chance = 0.05D;
 
         @Config.Name("Bliss Duration (ticks) for placing a flower on a grave")
 		@Config.Comment("The duration of the bliss effect in ticks.")
@@ -64,8 +64,24 @@ public class Settings {
 		public double bliss_duration_for_burying = 1600;
         
         @Config.Name("Bliss Healing Amount")
-		@Config.Comment("The amount of health restored per bliss tick (0.0 - 1.0, where 1.0 = is one heart).")
+		@Config.Comment("The amount of health restored per bliss-tick (0.0 - 1.0, where 1.0 = is one heart).")
 		public double bliss_healing_amount = 0.33D;
+
+        @Config.Name("Haunting Gained by Breaking Remains")
+        @Config.Comment("The amount of haunting gained by breaking remains.")
+        public int haunting_gained_by_breaking_remains = 5;
+
+        @Config.Name("Haunting Gained by Breaking Grave")
+        @Config.Comment("The amount of haunting gained by breaking a grave.")
+        public int haunting_gained_by_breaking_grave = 2;
+
+        @Config.Name("Haunting Reduced by Burying Remains")
+        @Config.Comment("The amount of haunting reduced by burying remains.")
+        public int haunting_reduced_by_burying_remains = 5;
+
+        @Config.Name("Haunting Reduced by Placing a Flower on a Grave")
+        @Config.Comment("The amount of haunting reduced by placing a flower on a grave.")
+        public int haunting_reduced_by_placing_flower_on_grave = 2;
     }
 
     public static class ClientSettings {

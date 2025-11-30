@@ -1,12 +1,16 @@
 package com.windanesz.lostloot.block;
 
+import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.Settings;
+import com.windanesz.lostloot.capability.HauntingCapability;
 import com.windanesz.lostloot.init.ModBlocks;
 import com.windanesz.lostloot.init.ModPotions;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
@@ -14,6 +18,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -60,6 +65,21 @@ public class BlockGraveMarker extends BlockLostLoot {
 					if (!tileentitygravemarker.getFlowerPlaced()) {
 						playerIn.addPotionEffect(new PotionEffect(ModPotions.bliss, (int) Settings.worldgenSettings.bliss_duration_for_flower));
 						tileentitygravemarker.setFlowerPlaced(true);
+
+						if (playerIn instanceof EntityPlayerMP) {
+							EntityPlayerMP player = (EntityPlayerMP) playerIn;
+							HauntingCapability haunting = HauntingCapability.get(player);
+							if (haunting != null) {
+								int toReduce = Settings.worldgenSettings.haunting_reduced_by_placing_flower_on_grave;
+								haunting.reduceHauntingProgress(toReduce);
+							}
+							Advancement advancement = player.getServer().getAdvancementManager().getAdvancement(new ResourceLocation(LostLoot.MODID, "flower_on_grave"));
+							if (advancement != null) {
+								if (!player.getAdvancements().getProgress(advancement).isDone()) {
+									player.getAdvancements().grantCriterion(advancement, "flower_on_grave");
+								}
+							}
+						}
 					}
 					tileentitygravemarker.markDirty();
 					worldIn.notifyBlockUpdate(pos, state, state, 3);
@@ -116,9 +136,16 @@ public class BlockGraveMarker extends BlockLostLoot {
 					worldIn.destroyBlock(posDown, true);
 				}
 			}
-		} else {
-			// If not harvested with a shovel, drop the grave marker itself.
-			super.harvestBlock(worldIn, player, pos, state, te, stack);
+			// Add haunting for breaking grave
+			if (player instanceof EntityPlayerMP) {
+				HauntingCapability haunting = HauntingCapability.get(player);
+				if (haunting != null) {
+					int toAdd = Settings.worldgenSettings.haunting_gained_by_breaking_grave;
+					haunting.addHauntingProgress(toAdd);
+				}
+			} else {
+				super.harvestBlock(worldIn, player, pos, state, te, stack);
+			}
 		}
 	}
 }
