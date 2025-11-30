@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:iron_shovel"
+    },
+    "title": {
+      "translate": "advancements.lostloot.bury_remains.title"
+    },
+    "description": {
+      "translate": "advancements.lostloot.bury_remains.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "lostloot:root",
+  "criteria": {
+    "bury_remains": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

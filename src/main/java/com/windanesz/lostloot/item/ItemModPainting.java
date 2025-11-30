@@ -1,17 +1,20 @@
 package com.windanesz.lostloot.item;
 
 import com.windanesz.lostloot.entity.EntityModPainting;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -20,8 +23,7 @@ import java.util.stream.Stream;
 public class ItemModPainting extends Item {
 
 	public enum EnumPainting {
-		PAINTING_THE_HAUNTING("painting_the_haunting", 32, 32, 0, 0, true),
-		PAINTING_PORTRAIT("painting_portrait", 32, 48, 32, 32, true);
+		PAINTING_THE_HAUNTING("painting_the_haunting", 32, 32, 0, 0, true), PAINTING_PORTRAIT("painting_portrait", 32, 48, 32, 32, true);
 
 		public final String name;
 		public final int sizeX;
@@ -30,8 +32,7 @@ public class ItemModPainting extends Item {
 		public final int v;
 		public final boolean renderPlayer;
 
-		private static final Map<String, EnumPainting> BY_NAME = Stream.of(values())
-				.collect(Collectors.toMap(e -> e.name, Function.identity()));
+		private static final Map<String, EnumPainting> BY_NAME = Stream.of(values()).collect(Collectors.toMap(e -> e.name, Function.identity()));
 
 
 		EnumPainting(String name, int sizeX, int sizeY, int u, int v, boolean renderPlayer) {
@@ -65,7 +66,7 @@ public class ItemModPainting extends Item {
 		if (facing != EnumFacing.DOWN && facing != EnumFacing.UP && player.canPlayerEdit(blockpos, facing, itemstack)) {
 			EntityModPainting painting = new EntityModPainting(worldIn, blockpos, facing);
 
-			if (painting != null && painting.onValidSurface()) {
+			if (painting.onValidSurface()) {
 				if (!worldIn.isRemote) {
 					painting.playPlaceSound();
 					painting.setProperties(facing.getHorizontalAngle(), this.painting.sizeX, this.painting.sizeY, this.painting.name);
@@ -74,6 +75,7 @@ public class ItemModPainting extends Item {
 						painting.setOwnerId(java.util.UUID.fromString(ownerTag.getString("UUID")));
 					} else {
 						painting.setOwnerId(player.getUniqueID());
+						painting.setOwnerName(player.getName());
 					}
 					worldIn.spawnEntity(painting);
 					itemstack.shrink(1);
@@ -87,4 +89,16 @@ public class ItemModPainting extends Item {
 		}
 	}
 
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+		NBTTagCompound nbt = stack.getTagCompound();
+		if (nbt != null && nbt.hasKey("Owner")) {
+			NBTTagCompound ownerTag = nbt.getCompoundTag("Owner");
+			if (ownerTag.hasKey("PlayerName", 8)) {
+				String ownerName = ownerTag.getString("PlayerName");
+				tooltip.add(ownerName);
+			}
+		}
+	}
 }

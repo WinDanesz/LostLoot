@@ -34,9 +34,24 @@ public class ItemGraveRose extends ItemBlock {
 			return new ActionResult<>(EnumActionResult.FAIL, itemstack);
 		}
 
-		// Only summon if a specter isn't already linked
+		// If a specter is already linked, unsummon it
 		if (itemstack.getSubCompound("SpecterUUID") != null) {
-			return new ActionResult<>(EnumActionResult.PASS, itemstack);
+			if (!worldIn.isRemote) {
+				String uuidString = itemstack.getSubCompound("SpecterUUID").getString("UUID");
+				if (!uuidString.isEmpty() && worldIn instanceof WorldServer) {
+					UUID specterUUID = UUID.fromString(uuidString);
+					Entity specter = ((WorldServer) worldIn).getEntityFromUuid(specterUUID);
+					if (specter instanceof EntityFamiliarSpecter) {
+						specter.setDead();
+					}
+				}
+				itemstack.removeSubCompound("SpecterUUID");
+				//itemstack.setItemDamage(itemstack.getMaxDamage());
+				if (!playerIn.capabilities.isCreativeMode) {
+					playerIn.getCooldownTracker().setCooldown(this, 3 * 60 * 20); // 3 minutes cooldown
+				}
+			}
+			return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
 		}
 
 		if (!worldIn.isRemote) {

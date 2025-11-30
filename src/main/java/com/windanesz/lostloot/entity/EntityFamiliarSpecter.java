@@ -1,6 +1,7 @@
 package com.windanesz.lostloot.entity;
 
 import com.windanesz.lostloot.LostLoot;
+import com.windanesz.lostloot.item.ItemGraveRose;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -146,6 +147,35 @@ public class EntityFamiliarSpecter extends EntityCreature implements IEntityOwna
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		this.noClip = true;
+
+		// Despawn if owner no longer holds the rose with this specter's UUID in main or offhand
+		EntityLivingBase owner = getOwner();
+		if (owner instanceof EntityPlayer && !owner.world.isRemote) {
+			EntityPlayer player = (EntityPlayer) owner;
+			boolean found = false;
+			UUID myUUID = this.getUniqueID();
+			// Check main hand
+			net.minecraft.item.ItemStack mainHand = player.getHeldItemMainhand();
+			if (mainHand != null && mainHand.getItem() instanceof ItemGraveRose && mainHand.getSubCompound("SpecterUUID") != null) {
+				String uuidString = mainHand.getSubCompound("SpecterUUID").getString("UUID");
+				if (!uuidString.isEmpty() && myUUID.toString().equals(uuidString)) {
+					found = true;
+				}
+			}
+			// Check offhand
+			if (!found) {
+				net.minecraft.item.ItemStack offHand = player.getHeldItemOffhand();
+				if (offHand != null && offHand.getItem() != null && offHand.getSubCompound("SpecterUUID") != null) {
+					String uuidString = offHand.getSubCompound("SpecterUUID").getString("UUID");
+					if (!uuidString.isEmpty() && myUUID.toString().equals(uuidString)) {
+						found = true;
+					}
+				}
+			}
+			if (!found) {
+				this.setDead();
+			}
+		}
 	}
 
 	@Nullable

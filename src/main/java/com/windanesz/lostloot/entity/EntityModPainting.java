@@ -8,7 +8,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,6 +34,7 @@ public class EntityModPainting extends EntityHanging implements IEntityAdditiona
 	protected static final DataParameter<Integer> SIZE_Y = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.VARINT);
 	protected static final DataParameter<Integer> HAUNTING_PROGRESS = EntityDataManager.createKey(EntityModPainting.class, DataSerializers.VARINT);
 	protected static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.<Optional<UUID>>createKey(EntityModPainting.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+	protected static final DataParameter<String> OWNER_NAME = EntityDataManager.<String>createKey(EntityModPainting.class, DataSerializers.STRING);
 
 	// Using vanilla skulls as a user profile cache
 	private final TileEntitySkull skull = new TileEntitySkull();
@@ -60,6 +60,7 @@ public class EntityModPainting extends EntityHanging implements IEntityAdditiona
 		this.dataManager.register(SIZE_Y, 32);
 		this.dataManager.register(HAUNTING_PROGRESS, 0);
 		this.dataManager.register(OWNER_UUID, Optional.absent());
+		this.dataManager.register(OWNER_NAME, "");
 	}
 
 	/**
@@ -99,6 +100,7 @@ public class EntityModPainting extends EntityHanging implements IEntityAdditiona
 			compound.setString("OwnerUUID", this.getOwnerId().get().toString());
 		}
 		compound.setInteger("HauntingProgress", this.getHauntingProgress());
+		compound.setString("PlayerName", this.getOwnerName());
 	}
 
 	/**
@@ -112,6 +114,9 @@ public class EntityModPainting extends EntityHanging implements IEntityAdditiona
 		if (compound.hasKey("OwnerUUID", 8)) {
 			UUID ownerUUID = UUID.fromString(compound.getString("OwnerUUID"));
 			setOwnerId(ownerUUID);
+		}
+		if (compound.hasKey("PlayerName", 8)) {
+			setOwnerName(compound.getString("PlayerName"));
 		}
 		this.setHauntingProgress(compound.getInteger("HauntingProgress"));
 	}
@@ -141,13 +146,14 @@ public class EntityModPainting extends EntityHanging implements IEntityAdditiona
 				if (entityplayer.capabilities.isCreativeMode) {
 					return;
 				}
+				Item item = this.getPainting().equals("painting_the_haunting") ? ModItems.painting_the_haunting : ModItems.painting_portrait;
+				ItemStack stack = new ItemStack(item);
+				if (getOwnerId().isPresent()) {
+					stack.getOrCreateSubCompound("Owner").setString("UUID", getOwnerId().get().toString());
+					stack.getOrCreateSubCompound("Owner").setString("PlayerName", getOwnerName());
+				}
+				this.entityDropItem(stack, 0.0F);
 			}
-			Item item = this.getPainting().equals("painting_the_haunting") ? ModItems.painting_the_haunting : ModItems.painting_portrait;
-			ItemStack stack = new ItemStack(item);
-			if (getOwnerId().isPresent()) {
-				stack.getOrCreateSubCompound("Owner").setString("UUID", getOwnerId().get().toString());
-			}
-			this.entityDropItem(stack, 0.0F);
 		}
 	}
 
@@ -209,6 +215,13 @@ public class EntityModPainting extends EntityHanging implements IEntityAdditiona
 		}
 	}
 
+	public void setOwnerName(String ownerName) {
+		this.dataManager.set(OWNER_NAME, ownerName);
+	}
+
+	public String getOwnerName() {
+		return this.dataManager.get(OWNER_NAME);
+	}
 
 	public void setHauntingProgress(int progress) {
 		this.dataManager.set(HAUNTING_PROGRESS, progress);

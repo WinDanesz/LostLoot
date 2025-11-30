@@ -1,13 +1,16 @@
 package com.windanesz.lostloot.block;
 
+import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.Settings;
 import com.windanesz.lostloot.block.TileEntityRemains;
 import com.windanesz.lostloot.init.ModBlocks;
 import com.windanesz.lostloot.init.ModPotions;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
@@ -16,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -71,6 +75,15 @@ public class BlockRemains extends BlockLostLoot {
 						worldIn.playSound(null, pos, SoundEvents.BLOCK_GRAVEL_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 						heldItemStack.damageItem(1, playerIn);
 						playerIn.addPotionEffect(new PotionEffect(ModPotions.bliss, (int) Settings.worldgenSettings.bliss_duration_for_burying));
+
+						if (playerIn instanceof EntityPlayerMP) {
+							EntityPlayerMP player = (EntityPlayerMP) playerIn;
+							Advancement advancement = player.getServer().getAdvancementManager().getAdvancement(new ResourceLocation(LostLoot.MODID, "bury_remains"));
+
+							if (advancement != null) {
+								player.getAdvancements().grantCriterion(advancement, "bury_remains");
+							}
+						}
 					}
 				}
 				return true;
