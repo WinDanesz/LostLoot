@@ -54,7 +54,7 @@ public class ModBlocks {
 		registerBlock(registry, "skeleton_crate", new BlockRemains(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		registerBlock(registry, "bush_crate", new BlockLostLootMultiBlock(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		//registerBlock(registry, "loot_scene_dummy", new BlockLootSceneDummy(Material.IRON));
-		registerBlock(registry, "stone_circle", new BlockLostLoot(Material.ROCK).setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 0.1, 1)));
+		registerBlock(registry, "stone_circle", new BlockStoneCircle(Material.ROCK).setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 0.1, 1)));
 		registerBlock(registry, "grave_marker", new BlockGraveMarker(Material.ROCK).setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 0.4, 1)).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		registerBlock(registry, "rose", new BlockRose());
 		registerBlock(registry, "grave_rose", new BlockRose());
@@ -94,5 +94,6 @@ public class ModBlocks {
 		GameRegistry.registerTileEntity(TileEntityLostLoot.class, new ResourceLocation(LostLoot.MODID, "lost_loot"));
 		GameRegistry.registerTileEntity(TileEntityGraveMarker.class, new ResourceLocation(LostLoot.MODID, "grave_marker"));
 		GameRegistry.registerTileEntity(TileEntityRemains.class, new ResourceLocation(LostLoot.MODID, "remains"));
+		GameRegistry.registerTileEntity(TileEntityStoneCircle.class, new ResourceLocation(LostLoot.MODID, "stone_circle"));
 	}
 }
