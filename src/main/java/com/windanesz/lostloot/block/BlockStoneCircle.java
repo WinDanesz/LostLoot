@@ -245,10 +245,10 @@ public class BlockStoneCircle extends BlockContainer {
                 // Ensure the space where the altar will sit can be replaced or is air.
                 // It should NOT be solid, non-plant blocks, or liquid.
                 if (altarMaterial.isSolid() && altarMaterial != Material.PLANTS && altarMaterial != Material.VINE && altarMaterial != Material.WEB && altarMaterial != Material.SNOW) {
-                    return false; // Cannot place altar on solid, non-plant blocks
+                    return false;
                 }
                 if (altarMaterial == Material.WATER || altarMaterial == Material.LAVA) {
-                    return false; // Cannot place altar in liquid
+                    return false;
                 }
 
                 // Ensure the space above the altar is also clear
@@ -265,28 +265,47 @@ public class BlockStoneCircle extends BlockContainer {
 		return true;
 	}
 
-	private void generateTwinAltar(World world, BlockPos newPos) {
-        // Clear a 3x3 area centered on newPos (where the stone circle will sit)
-        for (int x = -1; x <= 1; x++) {
-            for (int z = -1; z <= 1; z++) {
-                BlockPos clearPos = newPos.add(x, 0, z);
-                IBlockState stateToClear = world.getBlockState(clearPos);
-                // Clear out soft blocks, plants, etc.
-                if (stateToClear.getMaterial() == Material.PLANTS || stateToClear.getMaterial() == Material.VINE || stateToClear.getMaterial() == Material.WEB || stateToClear.getMaterial() == Material.SNOW) {
-                    world.setBlockToAir(clearPos);
-                }
-                // Clear the block above, just in case (e.g. tall grass)
-                BlockPos clearAbovePos = clearPos.up();
-                IBlockState stateToClearAbove = world.getBlockState(clearAbovePos);
-                if (stateToClearAbove.getMaterial() == Material.PLANTS || stateToClearAbove.getMaterial() == Material.VINE || stateToClearAbove.getMaterial() == Material.WEB || stateToClearAbove.getMaterial() == Material.SNOW) {
-                    world.setBlockToAir(clearAbovePos);
-                }
-            }
-        }
+	private void generateTwinAltar(World world, BlockPos center) {
 
-		IBlockState state = this.getDefaultState().withProperty(SNOWY, world.getBiome(newPos).isSnowyBiome());
-		world.setBlockState(newPos, state);
+		// Clear a 3×3×3 area around the altar
+		for (int x = -1; x <= 1; x++) {
+			for (int y = 0; y <= 2; y++) {
+				for (int z = -1; z <= 1; z++) {
+
+					BlockPos pos = center.add(x, y, z);
+
+					// Don't clear altar position on ground level
+					if (y == 0 && x == 0 && z == 0) continue;
+
+					IBlockState state = world.getBlockState(pos);
+					Material mat = state.getMaterial();
+					Block block = state.getBlock();
+
+					boolean isSoft =
+							block.isAir(state, world, pos) ||
+									block.isReplaceable(world, pos) ||
+									mat.isReplaceable() ||
+									block instanceof net.minecraft.block.BlockBush ||  // tallgrass, flowers, ferns
+									block instanceof net.minecraft.block.BlockLeaves ||
+									block instanceof net.minecraft.block.BlockVine ||
+									mat == Material.PLANTS ||
+									mat == Material.VINE ||
+									mat == Material.WEB ||
+									mat == Material.SNOW;
+
+					if (isSoft) {
+						world.setBlockToAir(pos);
+					}
+				}
+			}
+		}
+
+		// Place altar block
+		IBlockState altarState = this.getDefaultState()
+				.withProperty(SNOWY, world.getBiome(center).isSnowyBiome());
+		world.setBlockState(center, altarState, 2);
 	}
+
 
 	private void teleportPlayerToTwin(EntityPlayer player, BlockPos twinPos, int dimension) {
 		if (player instanceof EntityPlayerMP) {
