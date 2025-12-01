@@ -3,6 +3,7 @@ package com.windanesz.lostloot.init;
 import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.item.ItemModPainting;
 import com.windanesz.lostloot.item.ItemGraveRose;
+import com.windanesz.lostloot.item.ItemRuneOfSkimming;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -25,6 +26,7 @@ public class ModItems {
 	public static final Item grave_rose = placeholder();
 	public static final Item painting_the_haunting = placeholder();
 	public static final Item painting_portrait = placeholder();
+	public static final Item rune_of_skimming = placeholder();
 
 	@Nonnull
 	@SuppressWarnings("ConstantConditions")
@@ -40,6 +42,7 @@ public class ModItems {
 		registerItemBlock(registry, ModBlocks.rose);
 		registerItem(registry, "painting_the_haunting", new ItemModPainting(ItemModPainting.EnumPainting.PAINTING_THE_HAUNTING));
 		registerItem(registry, "painting_portrait", new ItemModPainting(ItemModPainting.EnumPainting.PAINTING_PORTRAIT));
+		registerItem(registry, "rune_of_skimming", new ItemRuneOfSkimming());
 		// Register ItemBlock for BlockLootScene
 	}
 

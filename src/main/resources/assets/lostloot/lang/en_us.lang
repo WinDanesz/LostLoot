@@ -9,6 +9,7 @@ tile.lostloot:grave_rose.name=Grave Rose
 tile.lostloot:grave_rose.desc=
 item.lostloot:painting_the_haunting.name=The Haunting
 item.lostloot:painting_portrait.name=Portrait
+item.lostloot:rune_of_skimming.name=Rune of Skimming
 potion.lostloot:bliss=Bliss
 advancements.lostloot.bury_remains.title=Rest In Peace
 advancements.lostloot.bury_remains.description=Give lost human remains a proper burial

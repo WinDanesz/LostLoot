@@ -1,6 +1,6 @@
 package com.windanesz.lostloot.block;
 
-import net.minecraft.block.Block;
+import com.windanesz.lostloot.init.ModItems;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -11,10 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -32,7 +29,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class BlockStoneCircle extends BlockContainer {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
@@ -67,28 +63,13 @@ public class BlockStoneCircle extends BlockContainer {
 		TileEntityStoneCircle stoneCircle = (TileEntityStoneCircle) te;
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 
-		if (heldItem.getItem() == Items.STICK) {
+		if (heldItem.getItem() == ModItems.rune_of_skimming) {
 			if (stoneCircle.getPair() != null) {
 				// Already paired, teleport
 				teleportPlayerToTwin(playerIn, stoneCircle.getPair(), worldIn.provider.getDimension());
 			} else {
-				// Not paired, try to create a pair
-				playerIn.sendMessage(new TextComponentString("This stone circle feels dormant... You feel a pull to a distant location."));
-				BlockPos twinPos = findAndGenerateTwinAltar(worldIn, pos);
-				if (twinPos != null) {
-					// Link them up
-					TileEntity otherTe = worldIn.getTileEntity(twinPos);
-					if (otherTe instanceof TileEntityStoneCircle) {
-						TileEntityStoneCircle otherStoneCircle = (TileEntityStoneCircle) otherTe;
-
-						stoneCircle.setPair(twinPos);
-						otherStoneCircle.setPair(pos);
-
-						playerIn.sendMessage(new TextComponentString(TextFormatting.GREEN + "The stone circle resonates with another one far away!"));
-					}
-				} else {
-					playerIn.sendMessage(new TextComponentString(TextFormatting.RED + "The magic fizzles. No suitable location could be found."));
-				}
+				// Not paired.
+				playerIn.sendMessage(new TextComponentString(TextFormatting.ITALIC + "This stone circle feels dormant... It has not yet found its twin."));
 			}
 			return true;
 		}
@@ -196,129 +177,16 @@ public class BlockStoneCircle extends BlockContainer {
 		// Optionally add more context (e.g., player, tile entity)
 		return lootTable.generateLootForPools(realWorld.rand, builder.build());
 	}
-
-	private BlockPos findAndGenerateTwinAltar(World world, BlockPos originalPos) {
-		Random random = world.rand;
-		int minDistance = 1000; // Minimum 1000 blocks away
-		int maxDistance = 5000; // Maximum 5000 blocks away
-		int attempts = 20;
-
-		for (int i = 0; i < attempts; i++) {
-			// Pick random direction and distance
-			double angle = random.nextDouble() * 2 * Math.PI;
-			int distance = minDistance + random.nextInt(maxDistance - minDistance);
-
-			int x = originalPos.getX() + (int) (Math.cos(angle) * distance);
-			int z = originalPos.getZ() + (int) (Math.sin(angle) * distance);
-
-			// Find suitable ground level
-			BlockPos surfacePos = world.getTopSolidOrLiquidBlock(new BlockPos(x, 0, z));
-
-			// Check if location is suitable
-			if (canGenerateAltarAt(world, surfacePos.down())) {
-				// Generate the twin altar
-				generateTwinAltar(world, surfacePos);
-				return surfacePos;
-			}
-		}
-
-		return null; // Failed to find suitable location
-	}
-
-	private boolean canGenerateAltarAt(World world, BlockPos pos) {
-		// 'pos' is the block *below* where the Stone Circle would sit.
-        // We check a 3x3 area centered at pos for the base, and centered at pos.up() for the altar itself.
-
-		for (int x = -1; x <= 1; x++) {
-			for (int z = -1; z <= 1; z++) {
-				BlockPos groundCheckPos = pos.add(x, 0, z); // The block below the potential altar
-				BlockPos altarCheckPos = groundCheckPos.up(); // The block where the altar would sit
-
-				IBlockState groundState = world.getBlockState(groundCheckPos);
-                // Ensure the ground is a solid, non-air, non-liquid block.
-                if (!groundState.getMaterial().isSolid() || groundState.getMaterial() == Material.AIR || groundState.getMaterial() == Material.WATER || groundState.getMaterial() == Material.LAVA) {
-                    return false;
-                }
-
-				IBlockState altarState = world.getBlockState(altarCheckPos);
-                Material altarMaterial = altarState.getMaterial();
-                // Ensure the space where the altar will sit can be replaced or is air.
-                // It should NOT be solid, non-plant blocks, or liquid.
-                if (altarMaterial.isSolid() && altarMaterial != Material.PLANTS && altarMaterial != Material.VINE && altarMaterial != Material.WEB && altarMaterial != Material.SNOW) {
-                    return false;
-                }
-                if (altarMaterial == Material.WATER || altarMaterial == Material.LAVA) {
-                    return false;
-                }
-
-                // Ensure the space above the altar is also clear
-                IBlockState aboveAltarState = world.getBlockState(altarCheckPos.up());
-                Material aboveAltarMaterial = aboveAltarState.getMaterial();
-                if (aboveAltarMaterial.isSolid() && aboveAltarMaterial != Material.PLANTS && aboveAltarMaterial != Material.VINE && aboveAltarMaterial != Material.WEB && aboveAltarMaterial != Material.SNOW) {
-                    return false;
-                }
-                if (aboveAltarMaterial == Material.WATER || aboveAltarMaterial == Material.LAVA) {
-                    return false;
-                }
-			}
-		}
-		return true;
-	}
-
-	private void generateTwinAltar(World world, BlockPos center) {
-
-		// Clear a 3×3×3 area around the altar
-		for (int x = -1; x <= 1; x++) {
-			for (int y = 0; y <= 2; y++) {
-				for (int z = -1; z <= 1; z++) {
-
-					BlockPos pos = center.add(x, y, z);
-
-					// Don't clear altar position on ground level
-					if (y == 0 && x == 0 && z == 0) continue;
-
-					IBlockState state = world.getBlockState(pos);
-					Material mat = state.getMaterial();
-					Block block = state.getBlock();
-
-					boolean isSoft =
-							block.isAir(state, world, pos) ||
-									block.isReplaceable(world, pos) ||
-									mat.isReplaceable() ||
-									block instanceof net.minecraft.block.BlockBush ||  // tallgrass, flowers, ferns
-									block instanceof net.minecraft.block.BlockLeaves ||
-									block instanceof net.minecraft.block.BlockVine ||
-									mat == Material.PLANTS ||
-									mat == Material.VINE ||
-									mat == Material.WEB ||
-									mat == Material.SNOW;
-
-					if (isSoft) {
-						world.setBlockToAir(pos);
-					}
-				}
-			}
-		}
-
-		// Place altar block
-		IBlockState altarState = this.getDefaultState()
-				.withProperty(SNOWY, world.getBiome(center).isSnowyBiome());
-		world.setBlockState(center, altarState, 2);
-	}
-
-
+	
 	private void teleportPlayerToTwin(EntityPlayer player, BlockPos twinPos, int dimension) {
 		if (player instanceof EntityPlayerMP) {
 			EntityPlayerMP playerMP = (EntityPlayerMP) player;
 
 			if (playerMP.dimension != dimension) {
 				// Cross-dimension teleport
-				playerMP.getServer().getPlayerList().transferPlayerToDimension(playerMP, dimension, new net.minecraftforge.common.util.ITeleporter() {
-					@Override
-					public void placeEntity(World world, Entity entity, float yaw) {
-						// Teleport above the altar structure
-						entity.setPositionAndUpdate(twinPos.getX() + 0.5, twinPos.getY() + 1, twinPos.getZ() + 0.5);
-					}
+				playerMP.getServer().getPlayerList().transferPlayerToDimension(playerMP, dimension, (world, entity, yaw) -> {
+					// Teleport above the altar structure
+					entity.setPositionAndUpdate(twinPos.getX() + 0.5, twinPos.getY() + 0.5, twinPos.getZ() + 0.5);
 				});
 			} else {
 				// Same dimension teleport - place above the altar
