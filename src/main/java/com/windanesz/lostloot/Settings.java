@@ -27,6 +27,10 @@ public class Settings {
     @Config.LangKey("settings.lostloot:general_settings")
     public static WorldgenSettings worldgenSettings = new WorldgenSettings();
 
+    @Config.Name("Item Settings")
+    @Config.LangKey("settings.lostloot:item_settings")
+    public static ItemSettings itemSettings = new ItemSettings();
+
     @Config.Name("Client Settings")
     @Config.LangKey("settings.lostloot:client_settings")
     public static ClientSettings clientSettings = new ClientSettings();
@@ -82,6 +86,16 @@ public class Settings {
         @Config.Name("Haunting Reduced by Placing a Flower on a Grave")
         @Config.Comment("The amount of haunting reduced by placing a flower on a grave.")
         public int haunting_reduced_by_placing_flower_on_grave = 2;
+    }
+
+    public static class ItemSettings {
+        @Config.Name("Rune of Skimming Max Teleport Distance")
+        @Config.Comment("Maximum distance (in blocks) the Rune of Skimming can teleport the player. Default: 150")
+        public int runeOfSkimmingMaxDistance = 150;
+
+        @Config.Name("Rune of Skimming Cooldown")
+        @Config.Comment("Cooldown (in ticks) after using the Rune of Skimming. Default: 100 (5 seconds)")
+        public int runeOfSkimmingCooldown = 100;
     }
 
     public static class ClientSettings {
