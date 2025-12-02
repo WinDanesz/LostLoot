@@ -104,7 +104,7 @@ public class ItemRuneOfSkimming extends ItemRune {
 		}
 
 		double distanceSq = player.getDistanceSq(pos);
-		double maxDistance = Settings.itemSettings.runeOfSkimmingMaxDistance;
+		double maxDistance = Settings.miscSettings.runeOfSkimmingMaxDistance;
 
 		if (distanceSq > maxDistance * maxDistance) {
 			player.sendMessage(new TextComponentTranslation("lostloot.rune.too_far"));
@@ -124,7 +124,7 @@ public class ItemRuneOfSkimming extends ItemRune {
 			player.world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			((WorldServer)player.world).spawnParticle(EnumParticleTypes.PORTAL, pos.getX() + 0.5, pos.getY() + 0.5 + player.height / 2, pos.getZ() + 0.5, 50, 0.5, 1.0, 0.5, 0.0);
 			
-			player.getCooldownTracker().setCooldown(this, Settings.itemSettings.runeOfSkimmingCooldown); // Cooldown from settings
+			player.getCooldownTracker().setCooldown(this, Settings.miscSettings.runeOfSkimmingCooldown); // Cooldown from settings
 		}
 	}
 

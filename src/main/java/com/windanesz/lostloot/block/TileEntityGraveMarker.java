@@ -57,7 +57,7 @@ public class TileEntityGraveMarker extends TileEntity implements ITickable {
 			// Start transformation
 			if (this.turnsIntoGraveRose == 0 && this.transformProgress == 0) {
 				if (this.getFlowerPotItem() == Item.getItemFromBlock(ModBlocks.rose)) {
-					if (this.world.rand.nextFloat() < Settings.worldgenSettings.grave_rose_chance) {
+					if (this.world.rand.nextFloat() < Settings.miscSettings.graveRoseChance) {
 						this.transformProgress = 1;
 					} else {
 						this.turnsIntoGraveRose = -1;

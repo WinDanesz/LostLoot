@@ -4,6 +4,9 @@ import com.windanesz.lostloot.capability.HauntingCapability;
 import com.windanesz.lostloot.init.ModBlocks;
 import com.windanesz.lostloot.init.ModLoot;
 import com.windanesz.lostloot.network.PacketHandler;
+import com.windanesz.lostloot.world.WorldGenLostCargo;
+import com.windanesz.lostloot.world.WorldGenStoneCircle;
+import com.windanesz.lostloot.world.WorldGenRemains;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.Mod;
@@ -46,7 +49,9 @@ public class LostLoot implements ForgeChunkManager.LoadingCallback {
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
-		GameRegistry.registerWorldGenerator(new LLWorldGen(), 0);
+		GameRegistry.registerWorldGenerator(new WorldGenLostCargo(), 0);
+		GameRegistry.registerWorldGenerator(new WorldGenStoneCircle(), 1);
+		GameRegistry.registerWorldGenerator(new WorldGenRemains(), 2);
 		proxy.registerColorHandlers();
 		PacketHandler.initPackets();
 	}

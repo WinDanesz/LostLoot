@@ -56,8 +56,8 @@ public class ModBlocks {
 		//registerBlock(registry, "loot_scene_dummy", new BlockLootSceneDummy(Material.IRON));
 		registerBlock(registry, "stone_circle", new BlockStoneCircle(Material.ROCK).setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 0.1, 1)));
 		registerBlock(registry, "grave_marker", new BlockGraveMarker(Material.ROCK).setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 0.4, 1)).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
-		registerBlock(registry, "rose", new BlockRose());
-		registerBlock(registry, "grave_rose", new BlockRose());
+		registerBlock(registry, "rose", new BlockRose().setCreativeTab(ModCreativeTab.lostLootTab));
+		registerBlock(registry, "grave_rose", new BlockRose().setCreativeTab(ModCreativeTab.lostLootTab));
 	}
 
 	public static void registerBlock(IForgeRegistry<Block> registry, String name, Block block) {

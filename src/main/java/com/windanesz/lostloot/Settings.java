@@ -27,9 +27,9 @@ public class Settings {
     @Config.LangKey("settings.lostloot:general_settings")
     public static WorldgenSettings worldgenSettings = new WorldgenSettings();
 
-    @Config.Name("Item Settings")
-    @Config.LangKey("settings.lostloot:item_settings")
-    public static ItemSettings itemSettings = new ItemSettings();
+	@Config.Name("Misc Settings")
+	@Config.LangKey("settings.lostloot:general_settings")
+	public static MiscSettings miscSettings = new MiscSettings();
 
     @Config.Name("Client Settings")
     @Config.LangKey("settings.lostloot:client_settings")
@@ -54,48 +54,57 @@ public class Settings {
         @Config.Comment("Biomes where Lost Cargo cannot generate")
         public String[] lostCargoBiomeBlacklist = new String[0];
 
+        @Config.Name("Stone Circle Chance")
+        @Config.Comment("Chance for a Stone Circle to generate in a chunk. 1 in X chance. Set to 0 to disable. Default: 1000")
+        public int stoneCircleChance = 50;
+
+        @Config.Name("Remains Chance")
+        @Config.Comment("Chance for (skeletal) Remains to generate in a chunk. 1 in X chance. Set to 0 to disable. Default: 50")
+        public int remainsChance = 50;
+    }
+
+    public static class MiscSettings {
+
 		@Config.Name("Grave Rose Chance")
 		@Config.Comment("The chance of a rose turning into a grave rose when it is placed in a grave marker.")
 		@Config.RequiresMcRestart
-		public double grave_rose_chance = 0.05D;
+		public double graveRoseChance = 0.05D;
 
-        @Config.Name("Bliss Duration (ticks) for placing a flower on a grave")
-		@Config.Comment("The duration of the bliss effect in ticks.")
-		public double bliss_duration_for_flower = 3600;
+		@Config.Name("Rune of Skimming Max Teleport Distance")
+		@Config.Comment("Maximum distance (in blocks) the Rune of Skimming can teleport the player. Default: 150")
+		public int runeOfSkimmingMaxDistance = 150;
 
-        @Config.Name("Bliss Duration (ticks) for burying remains")
-		@Config.Comment("The duration of the bliss effect in ticks.")
-		public double bliss_duration_for_burying = 1600;
-        
-        @Config.Name("Bliss Healing Amount")
+		@Config.Name("Rune of Skimming Cooldown")
+		@Config.Comment("Cooldown (in ticks) after using the Rune of Skimming. Default: 100 (5 seconds)")
+		public int runeOfSkimmingCooldown = 100;
+
+		@Config.Name("Bliss Healing Amount")
 		@Config.Comment("The amount of health restored per bliss-tick (0.0 - 1.0, where 1.0 = is one heart).")
-		public double bliss_healing_amount = 0.33D;
+		public double blissHealingAmount = 0.33D;
 
-        @Config.Name("Haunting Gained by Breaking Remains")
-        @Config.Comment("The amount of haunting gained by breaking remains.")
-        public int haunting_gained_by_breaking_remains = 5;
+		@Config.Name("Bliss Duration (ticks) for placing a flower on a grave")
+		@Config.Comment("The duration of the bliss effect in ticks.")
+		public double blissDurationForFlower = 3600;
 
-        @Config.Name("Haunting Gained by Breaking Grave")
-        @Config.Comment("The amount of haunting gained by breaking a grave.")
-        public int haunting_gained_by_breaking_grave = 2;
+		@Config.Name("Bliss Duration (ticks) for burying remains")
+		@Config.Comment("The duration of the bliss effect in ticks.")
+		public double blissDurationForBurying = 1600;
 
-        @Config.Name("Haunting Reduced by Burying Remains")
-        @Config.Comment("The amount of haunting reduced by burying remains.")
-        public int haunting_reduced_by_burying_remains = 5;
+		@Config.Name("Haunting Gained by Breaking Remains")
+		@Config.Comment("The amount of haunting gained by breaking remains.")
+		public int hauntingGainedByBreakingRemains = 5;
 
-        @Config.Name("Haunting Reduced by Placing a Flower on a Grave")
-        @Config.Comment("The amount of haunting reduced by placing a flower on a grave.")
-        public int haunting_reduced_by_placing_flower_on_grave = 2;
-    }
+		@Config.Name("Haunting Gained by Breaking Grave")
+		@Config.Comment("The amount of haunting gained by breaking a grave.")
+		public int hauntingGainedByBreakingGrave = 2;
 
-    public static class ItemSettings {
-        @Config.Name("Rune of Skimming Max Teleport Distance")
-        @Config.Comment("Maximum distance (in blocks) the Rune of Skimming can teleport the player. Default: 150")
-        public int runeOfSkimmingMaxDistance = 150;
+		@Config.Name("Haunting Reduced by Burying Remains")
+		@Config.Comment("The amount of haunting reduced by burying remains.")
+		public int hauntingReducedByBuryingRemains = 5;
 
-        @Config.Name("Rune of Skimming Cooldown")
-        @Config.Comment("Cooldown (in ticks) after using the Rune of Skimming. Default: 100 (5 seconds)")
-        public int runeOfSkimmingCooldown = 100;
+		@Config.Name("Haunting Reduced by Placing a Flower on a Grave")
+		@Config.Comment("The amount of haunting reduced by placing a flower on a grave.")
+		public int hauntingReducedByPlacingFlowerOnGrave = 2;
     }
 
     public static class ClientSettings {

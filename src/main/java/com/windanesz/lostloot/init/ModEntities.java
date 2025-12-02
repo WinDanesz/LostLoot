@@ -54,6 +54,7 @@ public class ModEntities {
 		registry.register(createEntry(EntitySpecter.class, "specter", TrackingType.LIVING).egg(0xebf2ff,0x6aeba6).build());
 		registry.register(createEntry(EntityFamiliarSpecter.class, "specter_familiar", TrackingType.LIVING).egg(0xebf2ff,0x6aeba6).build());
 		registry.register(createEntry(EntityModPainting.class, "forest_painting", TrackingType.LIVING).build());
+		registry.register(createEntry(EntitySpecter.class, "goblin", TrackingType.LIVING).egg(0x0d2e11,0x3eb049).build());
 	}
 
 	/**

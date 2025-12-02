@@ -43,7 +43,7 @@ public class BlockRemains extends BlockLostLoot {
 			if (!worldIn.isRemote) {
 				HauntingCapability haunting = HauntingCapability.get(playerMP);
 				if (haunting != null) {
-					double toAdd = Settings.worldgenSettings.haunting_gained_by_breaking_remains;
+					double toAdd = Settings.miscSettings.hauntingGainedByBreakingRemains;
 					haunting.addHauntingProgress((int) toAdd);
 				}
 			}
@@ -91,13 +91,13 @@ public class BlockRemains extends BlockLostLoot {
 						worldIn.setBlockState(pos, graveState, 3);
 						worldIn.playSound(null, pos, SoundEvents.BLOCK_GRAVEL_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 						heldItemStack.damageItem(1, playerIn);
-						playerIn.addPotionEffect(new PotionEffect(ModPotions.bliss, (int) Settings.worldgenSettings.bliss_duration_for_burying));
+						playerIn.addPotionEffect(new PotionEffect(ModPotions.bliss, (int) Settings.miscSettings.blissDurationForBurying));
 
 						if (playerIn instanceof EntityPlayerMP) {
 							EntityPlayerMP player = (EntityPlayerMP) playerIn;
 							HauntingCapability haunting = HauntingCapability.get(player);
 							if (haunting != null) {
-								int toReduce = Settings.worldgenSettings.haunting_reduced_by_burying_remains;
+								int toReduce = Settings.miscSettings.hauntingReducedByBuryingRemains;
 								haunting.reduceHauntingProgress(toReduce);
 							}
 							// Advancement granting for bury_remains has been removed.

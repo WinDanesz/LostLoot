@@ -4,7 +4,6 @@ import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.Settings;
 import com.windanesz.lostloot.client.Utils;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.MobEffects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
@@ -35,7 +34,7 @@ public class PotionBliss extends Potion {
 	public void performEffect(EntityLivingBase entityLivingBaseIn, int amplifier) {
         if (entityLivingBaseIn.getHealth() < entityLivingBaseIn.getMaxHealth()) {
             // Use the value from settings for healing.
-            entityLivingBaseIn.heal((float) Settings.worldgenSettings.bliss_healing_amount);
+            entityLivingBaseIn.heal((float) Settings.miscSettings.blissHealingAmount);
         }
     }
 

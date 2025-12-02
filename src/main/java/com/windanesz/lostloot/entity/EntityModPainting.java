@@ -146,7 +146,7 @@ public class EntityModPainting extends EntityHanging implements IEntityAdditiona
 				if (entityplayer.capabilities.isCreativeMode) {
 					return;
 				}
-				Item item = this.getPainting().equals("painting_the_haunting") ? ModItems.painting_the_haunting : ModItems.painting_portrait;
+				Item item = this.getPainting().equals("painting_the_haunting") ? ModItems.painting_in_the_woods : ModItems.painting_portrait;
 				ItemStack stack = new ItemStack(item);
 				if (getOwnerId().isPresent()) {
 					stack.getOrCreateSubCompound("Owner").setString("UUID", getOwnerId().get().toString());

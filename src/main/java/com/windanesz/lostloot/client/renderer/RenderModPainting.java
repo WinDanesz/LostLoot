@@ -54,10 +54,10 @@ public class RenderModPainting extends Render<EntityModPainting> {
 		ItemModPainting.EnumPainting p = ItemModPainting.EnumPainting.getByName(painting.getPainting());
 		if (p == null) {
 			// shouldn't happen but better to NPE
-			p = ItemModPainting.EnumPainting.PAINTING_THE_HAUNTING;
+			p = ItemModPainting.EnumPainting.PAINTING_IN_THE_WOODS;
 		}
 		int textureV = p.v;
-		if (p == ItemModPainting.EnumPainting.PAINTING_THE_HAUNTING) {
+		if (p == ItemModPainting.EnumPainting.PAINTING_IN_THE_WOODS) {
 			int hauntingProgress = painting.getHauntingProgress();
 			if (hauntingProgress >= 70) {
 				textureV = 96;
@@ -73,7 +73,7 @@ public class RenderModPainting extends Render<EntityModPainting> {
 			// Render player
 			GlStateManager.pushMatrix();
 
-			if (p == ItemModPainting.EnumPainting.PAINTING_THE_HAUNTING) {
+			if (p == ItemModPainting.EnumPainting.PAINTING_IN_THE_WOODS) {
 				int hauntingProgress = painting.getHauntingProgress();
 				float brightness = Math.max(0.0f, 1.0f - (hauntingProgress / 160.0f));
 				GlStateManager.color(brightness, brightness, brightness);
@@ -184,7 +184,7 @@ public class RenderModPainting extends Render<EntityModPainting> {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 
-		if (painting == ItemModPainting.EnumPainting.PAINTING_THE_HAUNTING) {
+		if (painting == ItemModPainting.EnumPainting.PAINTING_IN_THE_WOODS) {
 			float scale = 1.0f;
 			float headSize = 8 * scale;
 			float bodyWidth = 8 * scale;

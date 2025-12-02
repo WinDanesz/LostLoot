@@ -63,14 +63,14 @@ public class BlockGraveMarker extends BlockLostLoot {
 						itemstack.shrink(1);
 					}
 					if (!tileentitygravemarker.getFlowerPlaced()) {
-						playerIn.addPotionEffect(new PotionEffect(ModPotions.bliss, (int) Settings.worldgenSettings.bliss_duration_for_flower));
+						playerIn.addPotionEffect(new PotionEffect(ModPotions.bliss, (int) Settings.miscSettings.blissDurationForFlower));
 						tileentitygravemarker.setFlowerPlaced(true);
 
 						if (playerIn instanceof EntityPlayerMP) {
 							EntityPlayerMP player = (EntityPlayerMP) playerIn;
 							HauntingCapability haunting = HauntingCapability.get(player);
 							if (haunting != null) {
-								int toReduce = Settings.worldgenSettings.haunting_reduced_by_placing_flower_on_grave;
+								int toReduce = Settings.miscSettings.hauntingReducedByPlacingFlowerOnGrave;
 								haunting.reduceHauntingProgress(toReduce);
 							}
 							Advancement advancement = player.getServer().getAdvancementManager().getAdvancement(new ResourceLocation(LostLoot.MODID, "flower_on_grave"));
@@ -140,7 +140,7 @@ public class BlockGraveMarker extends BlockLostLoot {
 			if (player instanceof EntityPlayerMP) {
 				HauntingCapability haunting = HauntingCapability.get(player);
 				if (haunting != null) {
-					int toAdd = Settings.worldgenSettings.haunting_gained_by_breaking_grave;
+					int toAdd = Settings.miscSettings.hauntingGainedByBreakingGrave;
 					haunting.addHauntingProgress(toAdd);
 				}
 			} else {

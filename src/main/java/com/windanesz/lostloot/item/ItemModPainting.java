@@ -10,7 +10,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -23,7 +22,11 @@ import java.util.stream.Stream;
 public class ItemModPainting extends Item {
 
 	public enum EnumPainting {
-		PAINTING_THE_HAUNTING("painting_the_haunting", 32, 32, 0, 0, true), PAINTING_PORTRAIT("painting_portrait", 32, 48, 32, 32, true);
+		PAINTING_IN_THE_WOODS("painting_in_the_woods", 32, 32, 0, 0, true),
+		PAINTING_PORTRAIT("painting_portrait", 32, 48, 32, 32, true),
+		PAINTING_THE_BLOODCURLING("painting_the_bloodcurling", 16, 32, 32, 0, true),
+		PAINTING_WHEEL("painting_wheel", 16, 32, 48, 0, true),
+		PAINTING_WIZARDRY("painting_wizardry", 32, 48, 32, 80, true);
 
 		public final String name;
 		public final int sizeX;

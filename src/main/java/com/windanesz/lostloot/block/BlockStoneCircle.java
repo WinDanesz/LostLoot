@@ -186,11 +186,11 @@ public class BlockStoneCircle extends BlockContainer {
 				// Cross-dimension teleport
 				playerMP.getServer().getPlayerList().transferPlayerToDimension(playerMP, dimension, (world, entity, yaw) -> {
 					// Teleport above the altar structure
-					entity.setPositionAndUpdate(twinPos.getX() + 0.5, twinPos.getY() + 0.5, twinPos.getZ() + 0.5);
+					entity.setPositionAndUpdate(twinPos.getX() + 0.5, twinPos.getY() + 0.2, twinPos.getZ() + 0.5);
 				});
 			} else {
 				// Same dimension teleport - place above the altar
-				playerMP.setPositionAndUpdate(twinPos.getX() + 0.5, twinPos.getY() + 1, twinPos.getZ() + 0.5);
+				playerMP.setPositionAndUpdate(twinPos.getX() + 0.5, twinPos.getY() + 0.2, twinPos.getZ() + 0.5);
 			}
 
 			// Play teleport sound
