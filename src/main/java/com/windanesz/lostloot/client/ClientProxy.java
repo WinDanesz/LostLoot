@@ -4,11 +4,9 @@ import com.windanesz.lostloot.CommonProxy;
 import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.block.TileEntityGraveMarker;
 import com.windanesz.lostloot.capability.HauntingCapability;
-import com.windanesz.lostloot.client.renderer.RenderFamiliarSpecter;
-import com.windanesz.lostloot.client.renderer.RenderModPainting;
-import com.windanesz.lostloot.client.renderer.RenderSpecter;
-import com.windanesz.lostloot.client.renderer.TileEntityGraveMarkerRenderer;
+import com.windanesz.lostloot.client.renderer.*;
 import com.windanesz.lostloot.entity.EntityFamiliarSpecter;
+import com.windanesz.lostloot.entity.EntityGoblin;
 import com.windanesz.lostloot.entity.EntityModPainting;
 import com.windanesz.lostloot.entity.EntitySpecter;
 import com.windanesz.lostloot.init.ModBlocks;
@@ -62,6 +60,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntitySpecter.class, RenderSpecter::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityFamiliarSpecter.class, RenderFamiliarSpecter::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityModPainting.class, RenderModPainting::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityGoblin.class, RenderGoblin::new);
 	}
 
 	private void registerTileEntityRenderers() {
