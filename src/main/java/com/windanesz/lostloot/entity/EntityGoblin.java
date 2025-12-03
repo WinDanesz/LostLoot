@@ -18,7 +18,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 public class EntityGoblin extends EntityTameable {
 
@@ -34,7 +33,7 @@ public class EntityGoblin extends EntityTameable {
 
 	public EntityGoblin(World worldIn) {
 		super(worldIn);
-		this.setSize(0.6F, 1.8F);
+		this.setSize(0.6F, 1.F);
 	}
 
 	@Nullable
@@ -46,7 +45,7 @@ public class EntityGoblin extends EntityTameable {
 	@Override
 	protected void initEntityAI() {
 		this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 0.5D, false));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1D, false));
 		this.tasks.addTask(5, new EntityAIFollowOwner(this, 1.0D, 5.0F, 3.0F));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
@@ -78,6 +77,7 @@ public class EntityGoblin extends EntityTameable {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
+		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2D);
@@ -98,6 +98,10 @@ public class EntityGoblin extends EntityTameable {
 		this.dataManager.set(NEUTRAL, neutral);
 	}
 
+	public boolean isOwner(Entity entityIn) {
+		return entityIn != null && entityIn.equals(this.getOwner());
+	}
+
 	@Override
 	public void setAttackTarget(@Nullable EntityLivingBase entitylivingbaseIn) {
 		if (this.isOwner(entitylivingbaseIn)) {
@@ -113,7 +117,7 @@ public class EntityGoblin extends EntityTameable {
 		if (this.isEntityInvulnerable(source)) {
 			return false;
 		}
-		if (this.isOwner((EntityLivingBase) source.getTrueSource())) {
+		if (this.isOwner(source.getTrueSource())) {
 			return false;
 		}
 		return super.attackEntityFrom(source, amount);
@@ -212,6 +216,6 @@ public class EntityGoblin extends EntityTameable {
 
 	@Override
 	public float getEyeHeight() {
-		return 0.5F;
+		return 0.8F;
 	}
 }
