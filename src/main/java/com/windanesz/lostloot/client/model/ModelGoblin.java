@@ -63,45 +63,46 @@ public class ModelGoblin extends ModelBiped {
 		this.bipedHead.addChild(this.leftEar);
 	}
 
-
-	public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-
-		this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
-		GlStateManager.pushMatrix();
-
-		if (this.isChild) {
-			float f = 2.0F;
-			GlStateManager.scale(0.75F, 0.75F, 0.75F);
-			GlStateManager.translate(0.0F, 16.0F * scale, 0.0F);
-			this.bipedHead.render(scale);
-			GlStateManager.popMatrix();
-			GlStateManager.pushMatrix();
-			GlStateManager.scale(0.5F, 0.5F, 0.5F);
-			GlStateManager.translate(0.0F, 24.0F * scale, 0.0F);
-			this.bipedBody.render(scale);
-			this.bipedRightArm.render(scale);
-			this.bipedLeftArm.render(scale);
-			this.bipedRightLeg.render(scale);
-			this.bipedLeftLeg.render(scale);
-			this.bipedHeadwear.render(scale);
-		} else {
-			if (entityIn.isSneaking()) {
-				GlStateManager.translate(0.0F, 0.2F, 0.0F);
-			}
-
-			//this.bipedHead.rotationPointY = 6;
-			System.out.println(this.bipedHead.rotationPointX);
-			this.bipedHead.render(scale);
-			this.bipedBody.render(scale);
-			this.bipedRightArm.render(scale);
-			this.bipedLeftArm.render(scale);
-			this.bipedRightLeg.render(scale);
-			this.bipedLeftLeg.render(scale);
-			this.bipedHeadwear.render(scale);
-		}
-
-		GlStateManager.popMatrix();
-	}
+//	@Override
+//	public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+//		super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+//
+//		if (true) return;
+//
+//		this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
+//		GlStateManager.pushMatrix();
+//
+//		if (this.isChild) {
+//			float f = 2.0F;
+//			GlStateManager.scale(0.75F, 0.75F, 0.75F);
+//			GlStateManager.translate(0.0F, 16.0F * scale, 0.0F);
+//			this.bipedHead.render(scale);
+//			GlStateManager.popMatrix();
+//			GlStateManager.pushMatrix();
+//			GlStateManager.scale(0.5F, 0.5F, 0.5F);
+//			GlStateManager.translate(0.0F, 24.0F * scale, 0.0F);
+//			this.bipedBody.render(scale);
+//			this.bipedRightArm.render(scale);
+//			this.bipedLeftArm.render(scale);
+//			this.bipedRightLeg.render(scale);
+//			this.bipedLeftLeg.render(scale);
+//			this.bipedHeadwear.render(scale);
+//		} else {
+//			if (entityIn.isSneaking()) {
+//				GlStateManager.translate(0.0F, 0.2F, 0.0F);
+//			}
+//
+//			this.bipedHead.render(scale);
+//			this.bipedBody.render(scale);
+//			this.bipedRightArm.render(scale);
+//			this.bipedLeftArm.render(scale);
+//			this.bipedRightLeg.render(scale);
+//			this.bipedLeftLeg.render(scale);
+//			this.bipedHeadwear.render(scale);
+//		}
+//
+//		GlStateManager.popMatrix();
+//	}
 
 	/**
 	 * Sets the model's various rotation angles. For bipeds, par1 and par2 are used for animating the movement of arms
@@ -198,9 +199,9 @@ public class ModelGoblin extends ModelBiped {
 			}
 
 			this.bipedRightArm.rotationPointZ = MathHelper.sin(this.bipedBody.rotateAngleY) * 5.0F;
-			this.bipedRightArm.rotationPointX = -MathHelper.cos(this.bipedBody.rotateAngleY) * 5.0F;
+			this.bipedRightArm.rotationPointX = -MathHelper.cos(this.bipedBody.rotateAngleY) * 3.5F;
 			this.bipedLeftArm.rotationPointZ = -MathHelper.sin(this.bipedBody.rotateAngleY) * 5.0F;
-			this.bipedLeftArm.rotationPointX = MathHelper.cos(this.bipedBody.rotateAngleY) * 5.0F;
+			this.bipedLeftArm.rotationPointX = MathHelper.cos(this.bipedBody.rotateAngleY) * 3.F;
 			this.bipedRightArm.rotateAngleY += this.bipedBody.rotateAngleY;
 			this.bipedLeftArm.rotateAngleY += this.bipedBody.rotateAngleY;
 			this.bipedLeftArm.rotateAngleX += this.bipedBody.rotateAngleY;
@@ -253,49 +254,49 @@ public class ModelGoblin extends ModelBiped {
 		copyModelAngles(this.bipedHead, this.bipedHeadwear);
 	}
 
-	public void setModelAttributes(ModelBase model) {
-		super.setModelAttributes(model);
+//	public void setModelAttributes(ModelBase model) {
+//		super.setModelAttributes(model);
+//
+//		if (model instanceof ModelBiped) {
+//			ModelBiped modelbiped = (ModelBiped) model;
+//			this.leftArmPose = modelbiped.leftArmPose;
+//			this.rightArmPose = modelbiped.rightArmPose;
+//			this.isSneak = modelbiped.isSneak;
+//		}
+//	}
 
-		if (model instanceof ModelBiped) {
-			ModelBiped modelbiped = (ModelBiped) model;
-			this.leftArmPose = modelbiped.leftArmPose;
-			this.rightArmPose = modelbiped.rightArmPose;
-			this.isSneak = modelbiped.isSneak;
-		}
-	}
+//	public void setVisible(boolean visible) {
+//		this.bipedHead.showModel = visible;
+//		this.bipedHeadwear.showModel = visible;
+//		this.bipedBody.showModel = visible;
+//		this.bipedRightArm.showModel = visible;
+//		this.bipedLeftArm.showModel = visible;
+//		this.bipedRightLeg.showModel = visible;
+//		this.bipedLeftLeg.showModel = visible;
+//	}
+//
+//	public void postRenderArm(float scale, EnumHandSide side) {
+//		this.getArmForSide(side).postRender(scale);
+//	}
 
-	public void setVisible(boolean visible) {
-		this.bipedHead.showModel = visible;
-		this.bipedHeadwear.showModel = visible;
-		this.bipedBody.showModel = visible;
-		this.bipedRightArm.showModel = visible;
-		this.bipedLeftArm.showModel = visible;
-		this.bipedRightLeg.showModel = visible;
-		this.bipedLeftLeg.showModel = visible;
-	}
+//	protected ModelRenderer getArmForSide(EnumHandSide side) {
+//		return side == EnumHandSide.LEFT ? this.bipedLeftArm : this.bipedRightArm;
+//	}
+//
+//	protected EnumHandSide getMainHand(Entity entityIn) {
+//		if (entityIn instanceof EntityLivingBase) {
+//			EntityLivingBase entitylivingbase = (EntityLivingBase) entityIn;
+//			EnumHandSide enumhandside = entitylivingbase.getPrimaryHand();
+//			return entitylivingbase.swingingHand == EnumHand.MAIN_HAND ? enumhandside : enumhandside.opposite();
+//		} else {
+//			return EnumHandSide.RIGHT;
+//		}
+//	}
 
-	public void postRenderArm(float scale, EnumHandSide side) {
-		this.getArmForSide(side).postRender(scale);
-	}
-
-	protected ModelRenderer getArmForSide(EnumHandSide side) {
-		return side == EnumHandSide.LEFT ? this.bipedLeftArm : this.bipedRightArm;
-	}
-
-	protected EnumHandSide getMainHand(Entity entityIn) {
-		if (entityIn instanceof EntityLivingBase) {
-			EntityLivingBase entitylivingbase = (EntityLivingBase) entityIn;
-			EnumHandSide enumhandside = entitylivingbase.getPrimaryHand();
-			return entitylivingbase.swingingHand == EnumHand.MAIN_HAND ? enumhandside : enumhandside.opposite();
-		} else {
-			return EnumHandSide.RIGHT;
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static enum ArmPose {
-		EMPTY, ITEM, BLOCK, BOW_AND_ARROW;
-	}
+//	@SideOnly(Side.CLIENT)
+//	public static enum ArmPose {
+//		EMPTY, ITEM, BLOCK, BOW_AND_ARROW;
+//	}
 
 	/**
 	 * This is a helper function from Tabula to set the rotation of model parts

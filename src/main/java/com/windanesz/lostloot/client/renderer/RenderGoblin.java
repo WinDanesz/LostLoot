@@ -40,6 +40,8 @@ public class RenderGoblin extends RenderBiped<EntityGoblin> {
 
 	@Override
 	public void doRender(EntityGoblin entity, double x, double y, double z, float entityYaw, float partialTicks) {
+		// Ensure setLivingAnimations is called before render
+		((ModelGoblin)this.mainModel).setLivingAnimations(entity, entity.limbSwing, entity.limbSwingAmount, partialTicks);
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 	}
 
