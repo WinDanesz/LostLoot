@@ -1,0 +1,6 @@
+{
+  "parent": "lostloot:block/tent",
+  "textures": {
+    "layer0": "lostloot:blocks/tent"
+  }
+}

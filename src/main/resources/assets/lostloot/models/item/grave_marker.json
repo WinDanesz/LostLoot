@@ -1,0 +1,6 @@
+{
+  "parent": "lostloot:block/grave_marker",
+  "textures": {
+    "layer0": "lostloot:blocks/grave_marker"
+  }
+}

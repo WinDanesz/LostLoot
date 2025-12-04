@@ -39,7 +39,9 @@ public class ModBlocks {
 	public static final Block grave_rose = placeholder();
 	public static final Block grave_marker = placeholder();
 	public static final Block forest_painting = placeholder();
-
+	public static final Block tent = placeholder();
+	public static final Block tent_abandoned = placeholder();
+	public static final Block tent_abandoned_idol = placeholder();
 	@Nonnull
 	@SuppressWarnings("ConstantConditions")
 	private static <T> T placeholder() {
@@ -58,6 +60,10 @@ public class ModBlocks {
 		registerBlock(registry, "grave_marker", new BlockGraveMarker(Material.ROCK).setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 0.4, 1)).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		registerBlock(registry, "rose", new BlockRose().setCreativeTab(ModCreativeTab.lostLootTab));
 		registerBlock(registry, "grave_rose", new BlockRose().setCreativeTab(ModCreativeTab.lostLootTab));
+		registerBlock(registry, "tent", new BlockTent(Material.WOOD).setCreativeTab(ModCreativeTab.lostLootTab));
+		registerBlock(registry, "tent_abandoned", new BlockTent(Material.WOOD).setCreativeTab(ModCreativeTab.lostLootTab));
+		registerBlock(registry, "tent_abandoned_idol", new BlockTent(Material.WOOD).setCreativeTab(ModCreativeTab.lostLootTab));
+
 	}
 
 	public static void registerBlock(IForgeRegistry<Block> registry, String name, Block block) {

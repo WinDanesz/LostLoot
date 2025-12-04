@@ -1,0 +1,6 @@
+{
+  "parent": "lostloot:block/bush_crate",
+  "textures": {
+    "layer0": "lostloot:blocks/bush_crate"
+  }
+}

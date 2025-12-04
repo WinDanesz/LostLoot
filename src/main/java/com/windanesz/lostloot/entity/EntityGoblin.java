@@ -6,6 +6,7 @@ import com.windanesz.lostloot.entity.ai.GoblinAIOwnerHurtByTarget;
 import com.windanesz.lostloot.entity.ai.GoblinAIOwnerHurtTarget;
 import com.windanesz.lostloot.entity.ai.GoblinAIFollowOwner;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -23,11 +24,20 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.pathfinding.PathFinder;
+import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.pathfinding.PathNodeType;
+import net.minecraft.pathfinding.WalkNodeProcessor;
 import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -48,8 +58,9 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 
 	public EntityGoblin(World worldIn) {
 		super(worldIn);
-		this.setSize(0.6F, 1.F);
+		this.setSize(0.6F, 1F);
 	}
+
 
 	@Override
 	protected void initEntityAI() {
@@ -189,10 +200,6 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 
-		if (this.world.isRemote) {
-			return;
-		}
-
 		if (hasOwner()) {
 			EntityLivingBase owner = getOwner();
 			boolean ownerMissingOrNotHoldingStick = true;
@@ -264,7 +271,7 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 
 	@Override
 	public float getEyeHeight() {
-		return 0.8F;
+		return 0.9F;
 	}
 
 	@Nullable

@@ -1,0 +1,6 @@
+{
+  "parent": "lostloot:block/lost_cargo",
+  "textures": {
+    "layer0": "lostloot:blocks/lost_cargo"
+  }
+}

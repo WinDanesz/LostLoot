@@ -1,0 +1,6 @@
+{
+  "parent": "lostloot:block/skeleton_crate",
+  "textures": {
+    "layer0": "lostloot:blocks/skeleton_crate"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "lostloot:block/stone_circle",
+  "textures": {
+    "layer0": "lostloot:blocks/stone_circle"
+  }
+}
