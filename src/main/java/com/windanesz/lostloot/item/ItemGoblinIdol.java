@@ -140,4 +140,8 @@ public class ItemGoblinIdol extends Item {
 
 		return super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
 	}
+
+	public boolean isActive(ItemStack stack) {
+		return stack.hasTagCompound() && stack.getTagCompound().getBoolean("active");
+	}
 }

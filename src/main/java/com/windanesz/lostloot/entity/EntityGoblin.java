@@ -5,6 +5,7 @@ import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.entity.ai.GoblinAIOwnerHurtByTarget;
 import com.windanesz.lostloot.entity.ai.GoblinAIOwnerHurtTarget;
 import com.windanesz.lostloot.entity.ai.GoblinAIFollowOwner;
+import com.windanesz.lostloot.init.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,6 +20,7 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -30,10 +32,7 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.WalkNodeProcessor;
 import net.minecraft.server.management.PreYggdrasilConverter;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -65,8 +64,8 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 	@Override
 	protected void initEntityAI() {
 		this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1D, false));
-		this.tasks.addTask(5, new GoblinAIFollowOwner(this, 1.0D, 5.0F, 3.0F));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.3D, false));
+		this.tasks.addTask(5, new GoblinAIFollowOwner(this, 1.3D, 5.0F, 3.0F));
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 
@@ -157,19 +156,7 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 	public boolean processInteract(EntityPlayer player, EnumHand hand) {
 		ItemStack itemstack = player.getHeldItem(hand);
 
-		if (!this.hasOwner() && itemstack.getItem() == Items.STICK) {
-			if (!player.capabilities.isCreativeMode) {
-				itemstack.shrink(1);
-			}
-
-			if (!this.world.isRemote) {
-				this.setTamedBy(player);
-				this.setNeutral(false);
-				this.hostilityTimer = 0;
-			}
-			return true;
-		}
-
+		// Interaction with stick no longer needed - goblins auto-ally based on active idol
 		return super.processInteract(player, hand);
 	}
 
@@ -193,7 +180,9 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 			String s1 = compound.getString("Owner");
 			s = PreYggdrasilConverter.convertMobOwnerIfNeeded(this.getServer(), s1);
 		}
-		this.setOwnerId(UUID.fromString(s));
+		if (!s.isEmpty()) {
+			this.setOwnerId(UUID.fromString(s));
+		}
 	}
 
 	@Override
@@ -202,17 +191,23 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 
 		if (hasOwner()) {
 			EntityLivingBase owner = getOwner();
-			boolean ownerMissingOrNotHoldingStick = true;
+			boolean ownerMissingOrNotHoldingActiveIdol = true;
 			if (owner instanceof EntityPlayer) {
 				EntityPlayer player = (EntityPlayer) owner;
-				if (player.isEntityAlive() && (player.getHeldItemMainhand().getItem() == Items.STICK || player.getHeldItemOffhand().getItem() == Items.STICK)) {
-					ownerMissingOrNotHoldingStick = false;
+				if (player.isEntityAlive()) {
+					// Check both hands for active goblin idol
+					ItemStack mainHand = player.getHeldItemMainhand();
+					ItemStack offHand = player.getHeldItemOffhand();
+					
+					if (isActiveGoblinIdol(mainHand) || isActiveGoblinIdol(offHand)) {
+						ownerMissingOrNotHoldingActiveIdol = false;
+					}
 				}
 			}
 
-			if (ownerMissingOrNotHoldingStick) {
+			if (ownerMissingOrNotHoldingActiveIdol) {
 				ownershipLossTimer++;
-				if (ownershipLossTimer > 60) {
+				if (ownershipLossTimer > 20) { // Instant transition to neutral
 					setOwnerId(null);
 					setNeutral(true);
 					ownershipLossTimer = 0;
@@ -223,11 +218,48 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 			}
 		} else if (isNeutral()) {
 			hostilityTimer++;
-			if (hostilityTimer > 60) {
+			if (hostilityTimer > 60) { // 3 seconds (60 ticks) before becoming hostile
 				setNeutral(false);
 				hostilityTimer = 0;
+				// Spawn angry particles
+				if (this.world.isRemote) {
+					for (int i = 0; i < 5; i++) {
+						double d0 = this.rand.nextGaussian() * 0.02D;
+						double d1 = this.rand.nextGaussian() * 0.02D;
+						double d2 = this.rand.nextGaussian() * 0.02D;
+						this.world.spawnParticle(EnumParticleTypes.VILLAGER_ANGRY,
+								this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width,
+								this.posY + 0.5D + (double)(this.rand.nextFloat() * this.height),
+								this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width,
+								d0, d1, d2);
+					}
+				}
+			}
+		} else {
+			// Check if any nearby player is holding an active goblin idol
+			EntityPlayer nearestPlayer = this.world.getClosestPlayerToEntity(this, 16.0D);
+			if (nearestPlayer != null && !nearestPlayer.isCreative() && !nearestPlayer.isSpectator()) {
+				ItemStack mainHand = nearestPlayer.getHeldItemMainhand();
+				ItemStack offHand = nearestPlayer.getHeldItemOffhand();
+				
+				if (isActiveGoblinIdol(mainHand) || isActiveGoblinIdol(offHand)) {
+					// Ally with this player
+					this.setTamedBy(nearestPlayer);
+					this.setNeutral(false);
+					this.hostilityTimer = 0;
+					this.setAttackTarget(null);
+				}
 			}
 		}
+	}
+
+	private boolean isActiveGoblinIdol(ItemStack stack) {
+		if (stack.getItem() == ModItems.goblin_idol) {
+			if (stack.hasTagCompound() && stack.getTagCompound().hasKey("active")) {
+				return stack.getTagCompound().getBoolean("active");
+			}
+		}
+		return false;
 	}
 
 	public boolean hasOwner() {
@@ -306,6 +338,15 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 			}
 		} else {
 			return false;
+		}
+	}
+
+	@Override
+	protected void setEquipmentBasedOnDifficulty(net.minecraft.world.DifficultyInstance difficulty) {
+		super.setEquipmentBasedOnDifficulty(difficulty);
+		
+		if (this.rand.nextFloat() < 0.95F) {
+			this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.WOODEN_SWORD));
 		}
 	}
 }
