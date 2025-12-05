@@ -54,11 +54,12 @@ public class ModItems {
 
 		registerItem(registry, "mysterious_fur", new Item().setCreativeTab(ModCreativeTab.lostLootTab));
 		registerItem(registry, "silk_rope", new Item().setCreativeTab(ModCreativeTab.lostLootTab));
-		registerItem(registry, "silk_spindle", new Item().setCreativeTab(ModCreativeTab.lostLootTab));
+		registerItem(registry, "silk_spindle", new ItemSilkSpindle().setCreativeTab(ModCreativeTab.lostLootTab));
 		registerItem(registry, "bundle_of_lost_letters", new ItemBundleOfLostLetters().setCreativeTab(ModCreativeTab.lostLootTab));
 		registerItem(registry, "veiled_mask", new Item().setCreativeTab(ModCreativeTab.lostLootTab));
 		registerItem(registry, "wheel", new Item().setCreativeTab(ModCreativeTab.lostLootTab));
-		registerItem(registry, "wonder_fertilizer", new Item().setCreativeTab(ModCreativeTab.lostLootTab));
+		registerItem(registry, "wonder_fertilizer", new ItemWonderFertilizer().setCreativeTab(ModCreativeTab.lostLootTab));
+		registerItem(registry, "old_world_tinkers_kit", new ItemOldWorldTinkersKit().setCreativeTab(ModCreativeTab.lostLootTab));
 
 		// Register ItemBlocks
 		registerItemBlock(registry, ModBlocks.lost_cargo);

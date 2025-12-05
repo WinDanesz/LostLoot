@@ -25,9 +25,13 @@ item.lostloot:bundle_of_lost_letters.name=Bundle of Lost Letters
 item.lostloot:mysterious_fur.name=Mysterious Fur
 item.lostloot:silk_rope.name=Silk Rope
 item.lostloot:silk_spindle.name=Silk Spindle
+item.lostloot:silk_spindle.desc=Use to unravel into %s string
 item.lostloot:veiled_mask.name=Veiled Mask
 item.lostloot:wheel.name=Wheel
 item.lostloot:wonder_fertilizer.name=Wonder Fertilizer
+item.lostloot:old_world_tinkers_kit.name=Old World Tinker's Kit
+item.lostloot:old_world_tinkers_kit.desc=Restores durability to a held tool
+item.lostloot:old_world_tinkers_kit.desc2=Hold a damaged tool in your other hand and use to restore %s%% of its max durability
 
 item.lostloot:painting_in_the_woods.name=In the Woods
 item.lostloot:painting_portrait.name=Portrait

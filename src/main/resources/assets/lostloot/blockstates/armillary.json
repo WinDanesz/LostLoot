@@ -1,12 +1,8 @@
 {
   "variants": {
-    "facing=north,snowy=false": { "model": "lostloot:armillary" },
-    "facing=east,snowy=false":  { "model": "lostloot:armillary", "y": 90 },
-    "facing=south,snowy=false": { "model": "lostloot:armillary", "y": 180 },
-    "facing=west,snowy=false":  { "model": "lostloot:armillary", "y": 270 },
-    "facing=north,snowy=true": { "model": "lostloot:armillary" },
-    "facing=east,snowy=true":  { "model": "lostloot:armillary", "y": 90 },
-    "facing=south,snowy=true": { "model": "lostloot:armillary", "y": 180 },
-    "facing=west,snowy=true":  { "model": "lostloot:armillary", "y": 270 }
+    "facing=north": { "model": "lostloot:armillary" },
+    "facing=east":  { "model": "lostloot:armillary", "y": 90 },
+    "facing=south": { "model": "lostloot:armillary", "y": 180 },
+    "facing=west":  { "model": "lostloot:armillary", "y": 270 }
   }
 }

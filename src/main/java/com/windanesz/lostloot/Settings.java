@@ -109,6 +109,35 @@ public class Settings {
 		@Config.Name("Goblin Group Hostility Threshold")
 		@Config.Comment("When this many or more goblins are nearby, they will ignore active goblin idols and become hostile. Set to 0 to disable group behavior. Default: 6")
 		public int goblinGroupHostilityThreshold = 6;
+
+		@Config.Name("Bundle of Lost Letters XP Amount")
+		@Config.Comment("The amount of XP granted when using a Bundle of Lost Letters. Default: 300")
+		public int bundleOfLostLettersXP = 300;
+
+		@Config.Name("Bundle of Lost Letters Bliss Duration")
+		@Config.Comment("The duration of the bliss effect in ticks when using a Bundle of Lost Letters. Default: 600 (30 seconds)")
+		public int bundleOfLostLettersBlissDuration = 600;
+
+		@Config.Name("Bundle of Lost Letters Cooldown")
+		@Config.Comment("Cooldown (in ticks) after using a Bundle of Lost Letters. Default: 6000 (5 minutes)")
+		public int bundleOfLostLettersCooldown = 6000;
+
+		@Config.Name("Wonder Fertilizer Radius")
+		@Config.Comment("The radius in blocks for the Wonder Fertilizer's bonemeal effect. Default: 3 (creates a 7x7 area)")
+		public int wonderFertilizerRadius = 3;
+
+		@Config.Name("Wonder Fertilizer Durability")
+		@Config.Comment("The number of uses for the Wonder Fertilizer. Default: 2")
+		@Config.RequiresMcRestart
+		public int wonderFertilizerDurability = 2;
+
+		@Config.Name("Old World Tinker's Kit Durability Restore Percent")
+		@Config.Comment("The percentage of max durability restored by the Old World Tinker's Kit (0.0 - 1.0, where 1.0 = 100%). Default: 0.10 (10%)")
+		public double oldWorldTinkersKitRestorePercent = 0.10D;
+
+		@Config.Name("Silk Spindle String Amount")
+		@Config.Comment("The amount of string given when using a Silk Spindle. Default: 32")
+		public int silkSpindleStringAmount = 32;
     }
 
     public static class ClientSettings {

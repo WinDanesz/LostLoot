@@ -56,7 +56,7 @@ public class ModBlocks {
 		registerBlock(registry, "lost_cargo", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		registerBlock(registry, "lost_crate_potions", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		registerBlock(registry, "skeleton_crate", new BlockRemains(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
-		registerBlock(registry, "bush_crate", new BlockLostLootMultiBlock(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
+		registerBlock(registry, "bush_crate", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		//registerBlock(registry, "loot_scene_dummy", new BlockLootSceneDummy(Material.IRON));
 		registerBlock(registry, "stone_circle", new BlockStoneCircle(Material.ROCK).setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 0.1, 1)));
 		registerBlock(registry, "grave_marker", new BlockGraveMarker(Material.ROCK).setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 0.4, 1)).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
@@ -65,7 +65,7 @@ public class ModBlocks {
 		registerBlock(registry, "tent", new BlockTent(Material.WOOD).setCreativeTab(ModCreativeTab.lostLootTab));
 		registerBlock(registry, "tent_abandoned", new BlockTent(Material.WOOD).setCreativeTab(ModCreativeTab.lostLootTab));
 		registerBlock(registry, "tent_abandoned_idol", new BlockTent(Material.WOOD).setCreativeTab(ModCreativeTab.lostLootTab));
-		registerBlock(registry, "armillary", new BlockLostLoot(Material.IRON).setCreativeTab(ModCreativeTab.lostLootTab));
+		registerBlock(registry, "armillary", new BlockArmillary());
 
 	}
 
