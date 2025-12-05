@@ -22,6 +22,12 @@ public class GoblinAIOwnerHurtTarget extends EntityAITarget
      */
     public boolean shouldExecute()
     {
+        // Don't attack for owner when holding an idol
+        if (this.tameableMob.isHoldingIdol())
+        {
+            return false;
+        }
+        
         if (!this.tameableMob.hasOwner())
         {
             return false;

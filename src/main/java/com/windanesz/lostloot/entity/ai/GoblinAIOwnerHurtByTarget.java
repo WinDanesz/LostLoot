@@ -19,6 +19,11 @@ public class GoblinAIOwnerHurtByTarget extends EntityAITarget {
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
 	public boolean shouldExecute() {
+		// Don't defend owner when holding an idol
+		if (this.tameable.isHoldingIdol()) {
+			return false;
+		}
+		
 		if (!this.tameable.hasOwner()) {
 			return false;
 		} else {

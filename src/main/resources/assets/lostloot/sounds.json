@@ -1,0 +1,4 @@
+﻿{ 
+  "entity.specter_hurt":               {"category": "hostiles", "sounds": ["lostloot:specter_hurt_1", "lostloot:specter_hurt_2"]},
+  "idol_activate":                     {"category": "items",    "sounds": ["lostloot:specter_hurt_1", "lostloot:dhvara_tone"]}
+}

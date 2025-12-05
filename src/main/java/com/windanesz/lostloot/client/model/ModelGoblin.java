@@ -274,24 +274,29 @@ public class ModelGoblin extends ModelBiped {
 //		this.bipedRightLeg.showModel = visible;
 //		this.bipedLeftLeg.showModel = visible;
 //	}
-//
-//	public void postRenderArm(float scale, EnumHandSide side) {
-//		this.getArmForSide(side).postRender(scale);
-//	}
 
-//	protected ModelRenderer getArmForSide(EnumHandSide side) {
-//		return side == EnumHandSide.LEFT ? this.bipedLeftArm : this.bipedRightArm;
-//	}
-//
-//	protected EnumHandSide getMainHand(Entity entityIn) {
-//		if (entityIn instanceof EntityLivingBase) {
-//			EntityLivingBase entitylivingbase = (EntityLivingBase) entityIn;
-//			EnumHandSide enumhandside = entitylivingbase.getPrimaryHand();
-//			return entitylivingbase.swingingHand == EnumHand.MAIN_HAND ? enumhandside : enumhandside.opposite();
-//		} else {
-//			return EnumHandSide.RIGHT;
-//		}
-//	}
+	@Override
+	public void postRenderArm(float scale, EnumHandSide side) {
+		// Apply arm transformations first
+		this.getArmForSide(side).postRender(scale);
+		// Then adjust held item position for goblin's shorter stature
+		// Move items up by 3 pixels (3/16 = 0.1875)
+		GlStateManager.translate(0.0F, -0.1875F, 0.0F);
+	}
+
+	protected ModelRenderer getArmForSide(EnumHandSide side) {
+		return side == EnumHandSide.LEFT ? this.bipedLeftArm : this.bipedRightArm;
+	}
+
+	protected EnumHandSide getMainHand(Entity entityIn) {
+		if (entityIn instanceof EntityLivingBase) {
+			EntityLivingBase entitylivingbase = (EntityLivingBase) entityIn;
+			EnumHandSide enumhandside = entitylivingbase.getPrimaryHand();
+			return entitylivingbase.swingingHand == EnumHand.MAIN_HAND ? enumhandside : enumhandside.opposite();
+		} else {
+			return EnumHandSide.RIGHT;
+		}
+	}
 
 //	@SideOnly(Side.CLIENT)
 //	public static enum ArmPose {

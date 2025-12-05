@@ -44,6 +44,11 @@ public class GoblinAIFollowOwner extends EntityAIBase {
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
 	public boolean shouldExecute() {
+		// Don't follow owner when holding an idol
+		if (this.tameable.isHoldingIdol()) {
+			return false;
+		}
+		
 		EntityLivingBase entitylivingbase = this.tameable.getOwner();
 
 		if (entitylivingbase == null) {

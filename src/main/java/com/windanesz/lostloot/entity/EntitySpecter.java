@@ -1,12 +1,14 @@
 package com.windanesz.lostloot.entity;
 
 import com.windanesz.lostloot.LostLoot;
+import com.windanesz.lostloot.init.ModSounds;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
@@ -23,7 +25,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class EntitySpecter extends EntityCreature {
+public class EntitySpecter extends EntityMob {
 
     protected static final DataParameter<Boolean> ATTACKING = EntityDataManager.createKey(EntitySpecter.class, DataSerializers.BOOLEAN);
     public static final ResourceLocation LOOT_TABLE = new ResourceLocation(LostLoot.MODID, "entities/specter");
@@ -123,7 +125,7 @@ public class EntitySpecter extends EntityCreature {
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_VEX_HURT;
+        return ModSounds.SPECTER_HURT;
     }
 
     @Override

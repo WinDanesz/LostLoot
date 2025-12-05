@@ -2,9 +2,11 @@ package com.windanesz.lostloot.entity;
 
 import com.google.common.base.Optional;
 import com.windanesz.lostloot.LostLoot;
+import com.windanesz.lostloot.Settings;
 import com.windanesz.lostloot.entity.ai.GoblinAIOwnerHurtByTarget;
 import com.windanesz.lostloot.entity.ai.GoblinAIOwnerHurtTarget;
 import com.windanesz.lostloot.entity.ai.GoblinAIFollowOwner;
+import com.windanesz.lostloot.entity.ai.GoblinAIPickupIdol;
 import com.windanesz.lostloot.init.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -58,16 +60,18 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 	public EntityGoblin(World worldIn) {
 		super(worldIn);
 		this.setSize(0.6F, 1F);
+		this.setCanPickUpLoot(true);
 	}
 
 
 	@Override
 	protected void initEntityAI() {
+		this.tasks.addTask(0, new GoblinAIPickupIdol(this));
 		this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.3D, false));
-		this.tasks.addTask(5, new GoblinAIFollowOwner(this, 1.3D, 5.0F, 3.0F));
-		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-		this.tasks.addTask(8, new EntityAILookIdle(this));
+		this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.3D, false));
+		this.tasks.addTask(3, new GoblinAIFollowOwner(this, 1.3D, 5.0F, 3.0F));
+		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+		this.tasks.addTask(7, new EntityAILookIdle(this));
 
 		this.targetTasks.addTask(1, new GoblinAIOwnerHurtByTarget(this));
 		this.targetTasks.addTask(2, new GoblinAIOwnerHurtTarget(this));
@@ -75,6 +79,10 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 		this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<EntityPlayer>(this, EntityPlayer.class, true) {
 			@Override
 			public boolean shouldExecute() {
+				// Always hostile when holding an idol, otherwise follow normal rules
+				if (EntityGoblin.this.isHoldingIdol()) {
+					return super.shouldExecute();
+				}
 				return !EntityGoblin.this.hasOwner() && !EntityGoblin.this.isNeutral() && super.shouldExecute();
 			}
 
@@ -189,6 +197,43 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 
+		// Check if there are enough goblins nearby for group hostility behavior
+		int threshold = Settings.miscSettings.goblinGroupHostilityThreshold;
+		boolean inLargeGroup = false;
+		
+		if (threshold > 0) {
+			int nearbyGoblins = this.world.getEntitiesWithinAABB(
+				EntityGoblin.class,
+				this.getEntityBoundingBox().grow(16.0D, 8.0D, 16.0D)
+			).size();
+			
+			inLargeGroup = nearbyGoblins >= threshold;
+		}
+
+		// Goblins holding idols ignore ownership mechanics
+		if (isHoldingIdol()) {
+			if (hasOwner()) {
+				setOwnerId(null);
+				setNeutral(false);
+				ownershipLossTimer = 0;
+				hostilityTimer = 0;
+			}
+			return;
+		}
+
+		// If in a large group, turn hostile and ignore idol alliances
+		if (inLargeGroup) {
+			if (hasOwner()) {
+				// Break alliance and turn hostile
+				setOwnerId(null);
+				setNeutral(false);
+				ownershipLossTimer = 0;
+				hostilityTimer = 0;
+			}
+			// Skip the normal alliance logic below
+			return;
+		}
+
 		if (hasOwner()) {
 			EntityLivingBase owner = getOwner();
 			boolean ownerMissingOrNotHoldingActiveIdol = true;
@@ -260,6 +305,11 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 			}
 		}
 		return false;
+	}
+
+	public boolean isHoldingIdol() {
+		ItemStack offhand = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
+		return !offhand.isEmpty() && offhand.getItem() == ModItems.goblin_idol;
 	}
 
 	public boolean hasOwner() {
@@ -348,5 +398,32 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 		if (this.rand.nextFloat() < 0.95F) {
 			this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.WOODEN_SWORD));
 		}
+	}
+
+	@Override
+	public boolean canPickUpLoot() {
+		return true;
+	}
+
+	@Override
+	protected void updateEquipmentIfNeeded(net.minecraft.entity.item.EntityItem itemEntity) {
+		ItemStack itemstack = itemEntity.getItem();
+		
+		// Prioritize picking up goblin idols
+		if (itemstack.getItem() == ModItems.goblin_idol) {
+			// Drop current offhand item if present
+			ItemStack currentOffhand = this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
+			if (!currentOffhand.isEmpty()) {
+				this.entityDropItem(currentOffhand, 0.0F);
+			}
+			
+			// Pick up the idol in offhand regardless of current equipment
+			this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, itemstack.copy());
+			this.onItemPickup(itemEntity, itemstack.getCount());
+			itemEntity.setDead();
+			return;
+		}
+		
+		super.updateEquipmentIfNeeded(itemEntity);
 	}
 }

@@ -105,6 +105,10 @@ public class Settings {
 		@Config.Name("Haunting Reduced by Placing a Flower on a Grave")
 		@Config.Comment("The amount of haunting reduced by placing a flower on a grave.")
 		public int hauntingReducedByPlacingFlowerOnGrave = 2;
+
+		@Config.Name("Goblin Group Hostility Threshold")
+		@Config.Comment("When this many or more goblins are nearby, they will ignore active goblin idols and become hostile. Set to 0 to disable group behavior. Default: 6")
+		public int goblinGroupHostilityThreshold = 6;
     }
 
     public static class ClientSettings {
