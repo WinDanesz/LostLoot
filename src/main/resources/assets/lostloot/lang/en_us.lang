@@ -16,6 +16,19 @@ tile.lostloot:rose.name=Rose
 tile.lostloot:grave_rose.name=Grave Rose
 item.lostloot:goblin_idol.name=Goblin Idol
 tile.lostloot:grave_rose.desc=
+item.lostloot:pemmican.name=Pemmican
+tile.lostloot:armillary.name=Armillary
+item.lostloot:armillary.name=Armillary
+item.lostloot:armillary.desc=Tells the current moon phase and day
+
+item.lostloot:bundle_of_lost_letters.name=Bundle of Lost Letters
+item.lostloot:mysterious_fur.name=Mysterious Fur
+item.lostloot:silk_rope.name=Silk Rope
+item.lostloot:silk_spindle.name=Silk Spindle
+item.lostloot:veiled_mask.name=Veiled Mask
+item.lostloot:wheel.name=Wheel
+item.lostloot:wonder_fertilizer.name=Wonder Fertilizer
+
 item.lostloot:painting_in_the_woods.name=In the Woods
 item.lostloot:painting_portrait.name=Portrait
 item.lostloot:painting_wizardry.name=Wizardry

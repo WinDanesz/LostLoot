@@ -1,13 +1,11 @@
 package com.windanesz.lostloot.init;
 
 import com.windanesz.lostloot.LostLoot;
-import com.windanesz.lostloot.item.ItemGoblinIdol;
-import com.windanesz.lostloot.item.ItemModPainting;
-import com.windanesz.lostloot.item.ItemGraveRose;
-import com.windanesz.lostloot.item.ItemRuneOfSkimming;
+import com.windanesz.lostloot.item.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemFood;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -26,6 +24,7 @@ public class ModItems {
 	public static final Item grave_rose = placeholder();
 	public static final Item rune_of_skimming = placeholder();
 	public static final Item goblin_idol = placeholder();
+	public static final Item pemmican = placeholder();
 
 	public static final Item painting_in_the_woods = placeholder();
 	public static final Item painting_portrait = placeholder();
@@ -45,12 +44,21 @@ public class ModItems {
 		registerItem(registry, "grave_rose", new ItemGraveRose(ModBlocks.grave_rose).setCreativeTab(ModCreativeTab.lostLootTab));
 		registerItem(registry, "rune_of_skimming", new ItemRuneOfSkimming().setCreativeTab(ModCreativeTab.lostLootTab));
 		registerItem(registry, "goblin_idol", new ItemGoblinIdol().setCreativeTab(ModCreativeTab.lostLootTab));
+		registerItem(registry, "pemmican", new ItemFood(10, 0.8f, true).setCreativeTab(ModCreativeTab.lostLootTab));
 
 		registerItem(registry, "painting_in_the_woods", new ItemModPainting(ItemModPainting.EnumPainting.PAINTING_IN_THE_WOODS).setCreativeTab(ModCreativeTab.lostLootTab));
 		registerItem(registry, "painting_portrait", new ItemModPainting(ItemModPainting.EnumPainting.PAINTING_PORTRAIT).setCreativeTab(ModCreativeTab.lostLootTab));
 		registerItem(registry, "painting_the_bloodcurling", new ItemModPainting(ItemModPainting.EnumPainting.PAINTING_THE_BLOODCURLING).setCreativeTab(ModCreativeTab.lostLootTab));
 		registerItem(registry, "painting_wheel", new ItemModPainting(ItemModPainting.EnumPainting.PAINTING_WHEEL).setCreativeTab(ModCreativeTab.lostLootTab));
 		registerItem(registry, "painting_wizardry", new ItemModPainting(ItemModPainting.EnumPainting.PAINTING_WIZARDRY).setCreativeTab(ModCreativeTab.lostLootTab));
+
+		registerItem(registry, "mysterious_fur", new Item().setCreativeTab(ModCreativeTab.lostLootTab));
+		registerItem(registry, "silk_rope", new Item().setCreativeTab(ModCreativeTab.lostLootTab));
+		registerItem(registry, "silk_spindle", new Item().setCreativeTab(ModCreativeTab.lostLootTab));
+		registerItem(registry, "bundle_of_lost_letters", new ItemBundleOfLostLetters().setCreativeTab(ModCreativeTab.lostLootTab));
+		registerItem(registry, "veiled_mask", new Item().setCreativeTab(ModCreativeTab.lostLootTab));
+		registerItem(registry, "wheel", new Item().setCreativeTab(ModCreativeTab.lostLootTab));
+		registerItem(registry, "wonder_fertilizer", new Item().setCreativeTab(ModCreativeTab.lostLootTab));
 
 		// Register ItemBlocks
 		registerItemBlock(registry, ModBlocks.lost_cargo);
@@ -63,6 +71,7 @@ public class ModItems {
 		registerItemBlock(registry, ModBlocks.tent);
 		registerItemBlock(registry, ModBlocks.tent_abandoned);
 		registerItemBlock(registry, ModBlocks.tent_abandoned_idol);
+		registerItemBlock(registry, ModBlocks.armillary);
 	}
 
 	// Helper for registering ItemBlocks

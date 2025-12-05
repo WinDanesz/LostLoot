@@ -42,6 +42,8 @@ public class ModBlocks {
 	public static final Block tent = placeholder();
 	public static final Block tent_abandoned = placeholder();
 	public static final Block tent_abandoned_idol = placeholder();
+
+	public static final Block armillary = placeholder();
 	@Nonnull
 	@SuppressWarnings("ConstantConditions")
 	private static <T> T placeholder() {
@@ -63,6 +65,7 @@ public class ModBlocks {
 		registerBlock(registry, "tent", new BlockTent(Material.WOOD).setCreativeTab(ModCreativeTab.lostLootTab));
 		registerBlock(registry, "tent_abandoned", new BlockTent(Material.WOOD).setCreativeTab(ModCreativeTab.lostLootTab));
 		registerBlock(registry, "tent_abandoned_idol", new BlockTent(Material.WOOD).setCreativeTab(ModCreativeTab.lostLootTab));
+		registerBlock(registry, "armillary", new BlockLostLoot(Material.IRON).setCreativeTab(ModCreativeTab.lostLootTab));
 
 	}
 
