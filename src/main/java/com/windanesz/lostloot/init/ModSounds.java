@@ -14,7 +14,11 @@ public class ModSounds {
 	private ModSounds() {}
 
 	public static final SoundEvent SPECTER_HURT = createSound("entity.specter_hurt");
-	// public static final SoundEvent IDOL_ACTIVATE = createSound("entity.specter_hurt");
+	public static final SoundEvent GOBLIN_HURT = createSound("entity.goblin_hurt");
+	public static final SoundEvent GOBLIN_IDLE = createSound("entity.goblin_idle");
+	public static final SoundEvent GOBLIN_AGGRO = createSound("entity.goblin_aggro");
+	public static final SoundEvent GOBLIN_DIE = createSound("entity.goblin_die");
+	public static final SoundEvent IDOL_ACTIVATE = createSound("idol_activate");
 
 	public static SoundEvent createSound(String name) {
 		return createSound(LostLoot.MODID, name);

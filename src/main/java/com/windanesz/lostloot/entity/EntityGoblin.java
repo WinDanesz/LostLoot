@@ -6,8 +6,10 @@ import com.windanesz.lostloot.Settings;
 import com.windanesz.lostloot.entity.ai.GoblinAIOwnerHurtByTarget;
 import com.windanesz.lostloot.entity.ai.GoblinAIOwnerHurtTarget;
 import com.windanesz.lostloot.entity.ai.GoblinAIFollowOwner;
+import com.windanesz.lostloot.entity.ai.GoblinAIPanic;
 import com.windanesz.lostloot.entity.ai.GoblinAIPickupIdol;
 import com.windanesz.lostloot.init.ModItems;
+import com.windanesz.lostloot.init.ModSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -63,11 +65,11 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 		this.setCanPickUpLoot(true);
 	}
 
-
 	@Override
 	protected void initEntityAI() {
 		this.tasks.addTask(0, new GoblinAIPickupIdol(this));
-		this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
+		this.tasks.addTask(1, new GoblinAIPanic(this, 2.0D));
+		this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.3D, false));
 		this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.3D, false));
 		this.tasks.addTask(3, new GoblinAIFollowOwner(this, 1.3D, 5.0F, 3.0F));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
@@ -135,6 +137,12 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 			super.setAttackTarget(null);
 			return;
 		}
+		
+		// Play aggro sound when acquiring a new target
+		if (entitylivingbaseIn != null && this.getAttackTarget() != entitylivingbaseIn && !this.world.isRemote) {
+			this.playSound(ModSounds.GOBLIN_AGGRO, this.getSoundVolume(), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+		}
+		
 		super.setAttackTarget(entitylivingbaseIn);
 	}
 
@@ -338,17 +346,17 @@ public class EntityGoblin extends EntityMob implements IEntityOwnable {
 
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return SoundEvents.ENTITY_VILLAGER_AMBIENT;
+		return ModSounds.GOBLIN_IDLE;
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return SoundEvents.ENTITY_VILLAGER_AMBIENT;
+		return ModSounds.GOBLIN_DIE;
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return SoundEvents.ENTITY_VILLAGER_HURT;
+		return ModSounds.GOBLIN_HURT;
 	}
 
 	@Override

@@ -1,4 +1,8 @@
 ﻿{ 
-  "entity.specter_hurt":               {"category": "hostiles", "sounds": ["lostloot:specter_hurt_1", "lostloot:specter_hurt_2"]},
-  "idol_activate":                     {"category": "items",    "sounds": ["lostloot:specter_hurt_1", "lostloot:dhvara_tone"]}
+  "entity.specter_hurt":              {"category": "hostiles", "sounds": ["lostloot:specter_hurt_1", "lostloot:specter_hurt_2"]},
+  "entity.goblin_hurt":               {"category": "hostiles", "sounds": ["lostloot:goblin_hurt1", "lostloot:goblin_hurt2"]},
+  "entity.goblin_idle":               {"category": "hostiles", "sounds": ["lostloot:goblin_idle1", "lostloot:goblin_idle2"]},
+  "entity.goblin_die":                {"category": "hostiles", "sounds": ["lostloot:goblin_die1"]},
+  "entity.goblin_aggro":              {"category": "hostiles", "sounds": ["lostloot:goblin_aggro"]},
+  "idol_activate":                    {"category": "blocks",    "sounds": ["lostloot:dhvara_tone"]}
 }

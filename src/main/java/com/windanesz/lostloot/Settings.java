@@ -138,6 +138,22 @@ public class Settings {
 		@Config.Name("Silk Spindle String Amount")
 		@Config.Comment("The amount of string given when using a Silk Spindle. Default: 32")
 		public int silkSpindleStringAmount = 32;
+
+		@Config.Name("Tent Goblin Detection Range")
+		@Config.Comment("The range in blocks for tents to detect nearby players and spawn goblins. Default: 4")
+		public double tentGoblinDetectionRange = 4.0D;
+
+		@Config.Name("Tent Goblin Min Count")
+		@Config.Comment("Minimum number of goblins spawned by tents. Default: 1")
+		public int tentGoblinMinCount = 1;
+
+		@Config.Name("Tent Goblin Max Count")
+		@Config.Comment("Maximum number of goblins spawned by tents. Default: 3")
+		public int tentGoblinMaxCount = 3;
+
+		@Config.Name("Bush Crate Goblin Spawn Chance")
+		@Config.Comment("Chance (0.0 - 1.0) for bush crates to spawn goblins when a player is nearby. 0.0 = never, 1.0 = always. Default: 0.5 (50%)")
+		public double bushCrateGoblinSpawnChance = 0.5D;
     }
 
     public static class ClientSettings {

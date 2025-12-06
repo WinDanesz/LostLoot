@@ -8,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -32,6 +33,7 @@ public class BlockLostLoot extends BlockContainer {
     public static final PropertyBool SNOWY = PropertyBool.create("snowy");
 	public ResourceLocation lootTable;
 	public AxisAlignedBB boundingBox;
+	protected boolean shouldSpawnGoblins = false;
 
 	public BlockLostLoot(Material materialmaterialn) {
 		super(materialmaterialn);
@@ -41,8 +43,16 @@ public class BlockLostLoot extends BlockContainer {
 		this.boundingBox = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D); // Default AABB
 	}
 
+	public BlockLostLoot setSpawnGoblins(boolean shouldSpawnGoblins) {
+		this.shouldSpawnGoblins = shouldSpawnGoblins;
+		return this;
+	}
+
     @Override
-    public TileEntityLostLoot createNewTileEntity(World world, int meta) {
+    public TileEntity createNewTileEntity(World world, int meta) {
+        if (shouldSpawnGoblins) {
+            return new TileEntityTent();
+        }
         return new TileEntityLostLoot();
     }
 

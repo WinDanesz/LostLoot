@@ -4,6 +4,7 @@ import com.windanesz.lostloot.LostLoot;
 import com.windanesz.lostloot.block.*;
 import com.windanesz.lostloot.block.TileEntityGraveMarker;
 import com.windanesz.lostloot.block.TileEntityLostLoot;
+import com.windanesz.lostloot.block.TileEntityTent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.material.Material;
@@ -56,15 +57,15 @@ public class ModBlocks {
 		registerBlock(registry, "lost_cargo", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		registerBlock(registry, "lost_crate_potions", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		registerBlock(registry, "skeleton_crate", new BlockRemains(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
-		registerBlock(registry, "bush_crate", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
+		registerBlock(registry, "bush_crate", new BlockLostLoot(Material.WOOD).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")).setSpawnGoblins(true));
 		//registerBlock(registry, "loot_scene_dummy", new BlockLootSceneDummy(Material.IRON));
 		registerBlock(registry, "stone_circle", new BlockStoneCircle(Material.ROCK).setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 0.1, 1)));
 		registerBlock(registry, "grave_marker", new BlockGraveMarker(Material.ROCK).setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 0.4, 1)).setLootTable(new ResourceLocation(LostLoot.MODID, "chests/lost_cargo")));
 		registerBlock(registry, "rose", new BlockRose().setCreativeTab(ModCreativeTab.lostLootTab));
 		registerBlock(registry, "grave_rose", new BlockRose().setCreativeTab(ModCreativeTab.lostLootTab));
-		registerBlock(registry, "tent", new BlockTent(Material.WOOD).setCreativeTab(ModCreativeTab.lostLootTab));
-		registerBlock(registry, "tent_abandoned", new BlockTent(Material.WOOD).setCreativeTab(ModCreativeTab.lostLootTab));
-		registerBlock(registry, "tent_abandoned_idol", new BlockTent(Material.WOOD).setCreativeTab(ModCreativeTab.lostLootTab));
+		registerBlock(registry, "tent", new BlockTent(true).setCreativeTab(ModCreativeTab.lostLootTab));
+		registerBlock(registry, "tent_abandoned", new BlockTent(false).setCreativeTab(ModCreativeTab.lostLootTab));
+		registerBlock(registry, "tent_abandoned_idol", new BlockTent(false).setCreativeTab(ModCreativeTab.lostLootTab));
 		registerBlock(registry, "armillary", new BlockArmillary());
 
 	}
@@ -104,5 +105,6 @@ public class ModBlocks {
 		GameRegistry.registerTileEntity(TileEntityGraveMarker.class, new ResourceLocation(LostLoot.MODID, "grave_marker"));
 		GameRegistry.registerTileEntity(TileEntityRemains.class, new ResourceLocation(LostLoot.MODID, "remains"));
 		GameRegistry.registerTileEntity(TileEntityStoneCircle.class, new ResourceLocation(LostLoot.MODID, "stone_circle"));
+		GameRegistry.registerTileEntity(TileEntityTent.class, new ResourceLocation(LostLoot.MODID, "tent"));
 	}
 }
